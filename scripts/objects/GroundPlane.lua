@@ -42,4 +42,12 @@ function GroundPlane:drawSide()
     love.graphics.rectangle("line", x,y+top,w-x-x,h-y-y)
 end
 
+function GroundPlane:drawMask(object)
+    local d = ((object.y) - (self.y))
+    if d > 0 then return end
+    local w,h = self:getSize()
+    local top = -(math.abs(self.target_z*2) + self.target_z*2) / 2
+    love.graphics.rectangle("fill", 0,top,w,h-top)
+end
+
 return GroundPlane
