@@ -56,9 +56,6 @@ function Player:endAir()
 end
 
 function Player:updateAir()
-    if self.z < -100 then
-        self.world:hurtParty(1)
-    end
     self.z = self.z + (self.z_vel * (DTMULT*4))
     self.z_vel = math.max(-10, self.z_vel - (DTMULT/3.5))
     if self:isMovementEnabled() then

@@ -44,9 +44,11 @@ function Object:getGroundLevel()
         end
     end
     _G.Object.endCache()
-    if max_z == -math.huge and self.world then
-        if self.world.map.data and self.world.map.data.properties and self.world.map.data.properties.floor then
+    if max_z == -math.huge then
+        if self.world and self.world.map.data and self.world.map.data.properties and self.world.map.data.properties.floor then
             max_z = self.world.map.data.properties.floor
+        else
+            max_z = self.z
         end
     end
     return max_z
