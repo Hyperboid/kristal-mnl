@@ -52,4 +52,10 @@ function Object:getGroundLevel()
     return max_z
 end
 
+function Object:getScreenPos()
+    local x,y = super.getScreenPos(self)
+    y = y - (self.z * self.scale_y)
+    return x,y
+end
+
 return Object
