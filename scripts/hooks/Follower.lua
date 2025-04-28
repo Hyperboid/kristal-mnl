@@ -24,17 +24,10 @@ function Follower:getDesiredMovement(speed)
     local x, y = target:getRelativePosFor(self)
     x = x - self.width/2
     y = y - self.height
-    -- TODO: Delete this (see Player:checkSolidCollision)
-    do
-        if target then
-            if Utils.dist(self.x,0,target.x,0) < 40 and Utils.dist(0,self.y,0,target.y) < 40 then
-                x = 0
-                y = 0
-            end
-            -- if Utils.dist(0,self.y,0,target.y) < 40 then
-            --     y = 0
-            -- end
-        end
+    -- TODO: Rewrite to use history
+    if Utils.dist(self.x,0,target.x,0) < 39 and Utils.dist(0,self.y,0,target.y) < 39 then
+        x = 0
+        y = 0
     end
     return Utils.clamp(x/speed, -1,1), Utils.clamp(y/speed, -1, 1)
 end
