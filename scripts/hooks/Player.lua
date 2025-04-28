@@ -164,8 +164,12 @@ function Player:moveZ(z, speed)
         local prev_z = self.z
         self.z = self.z + dir
         if self:checkSolidCollision() then
-            self.z = prev_z
-            self.z_vel = math.abs(self.z_vel) * -dir
+            if self:getGroundLevel() >= self.z then
+                self:setState("WALK")
+            else
+                self.z = prev_z
+                self.z_vel = math.abs(self.z_vel) * -dir
+            end
             return
         end
     end
