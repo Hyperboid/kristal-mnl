@@ -8,9 +8,9 @@ function Object:init(...)
 end
 
 function Object:preDraw(...)
+    love.graphics.translate(0, -self.z*2)
     super.preDraw(self, ...)
     -- super.applyTransformTo(self, transform, ...)
-    love.graphics.translate(0, -self.z)
 end
 
 -- ---@param transform love.Transform
