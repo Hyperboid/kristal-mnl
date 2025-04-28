@@ -143,7 +143,10 @@ end
 function Player:beginAir()
     -- self.physics.speed_x = (self.x - self.last_x)/DTMULT
     -- self.physics.speed_y = (self.y - self.last_y)/DTMULT
-    self:setSprite("walk/"..self.facing.."_2")
+    self:setSprite("jump")
+    if not self.sprite.texture then
+        self:setSprite("walk/"..self.facing.."_2")
+    end
 end
 
 function Player:endAir()
