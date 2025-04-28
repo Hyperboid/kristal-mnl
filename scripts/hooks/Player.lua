@@ -66,10 +66,10 @@ function Player:checkSolidCollision()
     local follower = self.is_player and self.world.followers[1]
     if follower then
         -- TODO: Make this try to move the follower
-        if Utils.dist(0,self.y,0,follower.y) > 40 then
+        if Utils.dist(0,self.y,0,follower.y) > 60 then
             return true
         end
-        if Utils.dist(self.x,0,follower.x,0) > 40 then
+        if Utils.dist(self.x,0,follower.x,0) > 60 then
             return true
         end
     end

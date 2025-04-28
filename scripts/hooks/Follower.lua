@@ -11,25 +11,93 @@ function Follower:init(...)
     self.persistent = false
     self.is_player = false
     self.is_follower = true
+    self.following = true
     -- self.active = false
     -- self.timescale = 0.5
 end
 
 function Follower:updateIndex() end
-function Follower:updateHistory() end
+function Follower:updateHistory(moved, auto)
+    if moved == nil then return end
+    if moved then
+        self.blush_timer = 0
+    end
+    local target = self:getTarget()
+    
+    local auto_move = auto
+    
+    if moved or auto_move then
+        print("udpae "..RUNTIME)
+        self.history_time = self.history_time + DT
+
+        table.insert(self.history, 1, {x = target.x, y = target.y, facing = target.facing, time = self.history_time, state = target.state, state_args = target.state_manager.args, auto = auto})
+        while (self.history_time - self.history[#self.history].time) > (Game.max_followers * FOLLOW_DELAY) do
+            table.remove(self.history, #self.history)
+        end
+
+        if self.following and not self.physics.move_target then
+            self:moveToTarget()
+        end
+    end
+end
+
+function Follower:getTarget()
+    return self.target or self.world.player
+end
+
+
+function Follower:moveToTarget(speed)
+    if speed == nil then
+        speed = 8
+    end
+    if self:getTarget() then
+        print("target "..RUNTIME)
+        local tx, ty, facing, state, args = self:getTargetPosition()
+        local dx, dy = tx - self.x, ty - self.y
+
+        if speed then
+            dx = Utils.approach(self.x, tx, speed * DTMULT) - self.x
+            dy = Utils.approach(self.y, ty, speed * DTMULT) - self.y
+        end
+
+        self:move(dx, dy)
+
+        if facing and (not speed or (dx == 0 and dy == 0)) then
+            self:setFacing(facing)
+        end
+
+        return dx, dy
+    else
+        print("targn't "..RUNTIME)
+        return 0, 0
+    end
+end
+
+function Follower:getTargetPosition()
+    local follow_delay = FOLLOW_DELAY/2
+    local tx, ty, facing, state, args = self.x, self.y, self.facing, nil, {}
+    for i,v in ipairs(self.history) do
+        tx, ty, facing, state, args = v.x, v.y, v.facing, v.state, v.state_args
+        local upper = self.history_time - v.time
+        if upper > follow_delay then
+            if i > 1 then
+                local prev = self.history[i - 1]
+                local lower = self.history_time - prev.time
+
+                local t = (follow_delay - lower) / (upper - lower)
+
+                tx = Utils.lerp(prev.x, v.x, t)
+                ty = Utils.lerp(prev.y, v.y, t)
+            end
+            break
+        end
+    end
+    return tx, ty, facing, state, args
+end
+
 
 function Follower:getDesiredMovement(speed)
-    ---@type Player
-    local target = self.world.player
-    local x, y = target:getRelativePosFor(self)
-    x = x - self.width/2
-    y = y - self.height
-    -- TODO: Rewrite to use history
-    if Utils.dist(self.x,0,target.x,0) < 39 and Utils.dist(0,self.y,0,target.y) < 39 then
-        x = 0
-        y = 0
-    end
-    return Utils.clamp(x/speed, -1,1), Utils.clamp(y/speed, -1, 1)
+    return 0,0
 end
 
 function Follower:update()
