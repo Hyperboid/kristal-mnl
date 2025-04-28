@@ -27,7 +27,6 @@ function Follower:updateHistory(moved, auto)
     local auto_move = auto
     
     if moved or auto_move then
-        print("udpae "..RUNTIME)
         self.history_time = self.history_time + DT
 
         table.insert(self.history, 1, {x = target.x, y = target.y, facing = target.facing, time = self.history_time, state = target.state, state_args = target.state_manager.args, auto = auto})
@@ -51,7 +50,6 @@ function Follower:moveToTarget(speed)
         speed = 8
     end
     if self:getTarget() then
-        print("target "..RUNTIME)
         local tx, ty, facing, state, args = self:getTargetPosition()
         local dx, dy = tx - self.x, ty - self.y
 
