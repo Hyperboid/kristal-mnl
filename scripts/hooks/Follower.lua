@@ -100,6 +100,12 @@ function Follower:getDesiredMovement(speed)
     return 0,0
 end
 
+function Follower:onRemove(parent)
+    Utils.removeFromTable(self.world.followers, self)
+
+    Character.onRemove(self, parent)
+end
+
 function Follower:update()
     self.noclip = false
     super.update(self)
