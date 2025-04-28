@@ -7,6 +7,7 @@ function Player:init(...)
     self.jump_buffer = -math.huge
     self.state_manager:addState("AIR", {update = self.updateAir, enter = self.beginAir, leave = self.endAir})
     self.walk_speed = self.walk_speed + 2
+    self.force_walk = true
     self:addFX(GroundMaskFX())
 end
 
@@ -19,8 +20,17 @@ function Player:interact()
 end
 
 function Player:update()
+    -- ---@type Follower
+    -- local follower = self.world.followers[1]
+    -- if follower == self then follower = nil end
+    -- if follower then
+    --     follower:fullUpdate()
+    -- end
     super.update(self)
     self.jump_buffer = self.jump_buffer - DTMULT
+    -- if follower then
+    --     follower:fullUpdate()
+    -- end
 end
 
 function Player:updateWalk()
@@ -33,6 +43,80 @@ function Player:updateWalk()
     elseif self.jump_buffer > 0 then
         self.jump_buffer = 0
         self:jump()
+    end
+end
+
+function Player:getDesiredMovement(speed)
+    local x, y = 0, 0
+    if Input.down("left") then
+        x = - 1
+    elseif Input.down("right") then
+        x = 1
+    end
+    if Input.down("up") then
+        y = -1
+    elseif Input.down("down") then
+        y = 1
+    end
+    return x, y
+end
+
+function Player:checkSolidCollision()
+    ---@type Follower
+    local follower = self.is_player and self.world.followers[1]
+    if follower then
+        -- TODO: Make this try to move the follower
+        if Utils.dist(0,self.y,0,follower.y) > 40 then
+            return true
+        end
+        if Utils.dist(self.x,0,follower.x,0) > 40 then
+            return true
+        end
+    end
+    return super.checkSolidCollision(self)
+end
+
+function Player:handleMovement()
+    local walk_x, walk_y = self:getDesiredMovement(self.walk_speed)
+
+    self.moving_x = walk_x
+    self.moving_y = walk_y
+
+    local running = (Input.down("cancel") or self.force_run) and not self.force_walk
+    if Kristal.Config["autoRun"] and not self.force_run and not self.force_walk then
+        running = not running
+    end
+
+    if self.force_run and not self.force_walk then
+        self.run_timer = 200
+    end
+
+    local speed = self.walk_speed
+    if running then
+        if self.run_timer > 60 then
+            speed = speed + (Game:isLight() and 6 or 5)
+        elseif self.run_timer > 10 then
+            speed = speed + 4
+        else
+            speed = speed + 2
+        end
+    end
+
+    self:move(walk_x, walk_y, speed * DTMULT)
+
+    if not running or self.last_collided_x or self.last_collided_y then
+        self.run_timer = 0
+    elseif running then
+        if walk_x ~= 0 or walk_y ~= 0 then
+            self.run_timer = self.run_timer + DTMULT
+            self.run_timer_grace = 0
+        else
+            -- Dont reset running until 2 frames after you release the movement keys
+            if self.run_timer_grace >= 2 then
+                self.run_timer = 0
+            end
+            self.run_timer_grace = self.run_timer_grace + DTMULT
+        end
     end
 end
 
@@ -59,16 +143,8 @@ function Player:updateAir()
     self.z = self.z + (self.z_vel * (DTMULT*4))
     self.z_vel = math.max(-10, self.z_vel - (DTMULT/3.5))
     if self:isMovementEnabled() then
-        if Input.down("left") and self.physics.speed_x >= 0 then
-            self:move(-self.walk_speed, 0, DTMULT)
-        elseif Input.down("right") and self.physics.speed_x <= 0 then
-            self:move(self.walk_speed, 0, DTMULT)
-        end
-        if Input.down("up") and self.physics.speed_y >= 0 then
-            self:move(0, -self.walk_speed, DTMULT)
-        elseif Input.down("down") and self.physics.speed_y <= 0 then
-            self:move(0, self.walk_speed, DTMULT)
-        end
+        local x, y = self:getDesiredMovement(self.walk_speed)
+        self:move(x,y, DTMULT * self.walk_speed)
     end
     local ground_level = self:getGroundLevel()
     if self.z < ground_level then

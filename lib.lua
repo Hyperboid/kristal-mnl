@@ -2,7 +2,7 @@ local lib = {}
 
 function lib:init()
     ---@diagnostic disable-next-line: param-type-mismatch
-    Utils.hook(Collider, "thickness", 15, true)
+    Utils.hook(Collider, "thickness", 1, true)
     ---@diagnostic disable-next-line: param-type-mismatch
     Utils.hook(Collider, "z", 1, true)
     Utils.hook(Collider, "getZ", function (orig, self)

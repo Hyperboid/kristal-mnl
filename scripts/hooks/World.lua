@@ -30,4 +30,32 @@ function World:checkCollision(collider, ...)
     return not floor_found
 end
 
+function World:sortChildren()
+    Utils.pushPerformance("mnl/World#sortChildren")
+    Object.startCache()
+    local positions = {}
+    for _,child in ipairs(self.children) do
+        local x, y = child:getSortPosition()
+        positions[child] = {x = x, y = y}
+    end
+    table.stable_sort(self.children, function(a, b)
+        local a_pos, b_pos = positions[a], positions[b]
+        local ax, ay = a_pos.x, a_pos.y
+        local bx, by = b_pos.x, b_pos.y
+        if a.layer == b.layer then
+            if a:includes(GroundPlane) and b:includes(GroundPlane) then
+                return ((b.y-b.target_z)) > ((a.y-a.target_z))
+            end
+        end
+        -- Sort children by Y position, or by follower index if it's a follower/player (so the player is always on top)
+        return a.layer < b.layer or
+              (a.layer == b.layer and (math.floor(ay) < math.floor(by) or
+              (math.floor(ay) == math.floor(by) and (b == self.player or
+              (a:includes(Follower) and b:includes(Follower) and b.index < a.index)
+            ))))
+    end)
+    Object.endCache()
+    Utils.popPerformance()
+end
+
 return World
