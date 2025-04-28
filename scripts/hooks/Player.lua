@@ -11,13 +11,6 @@ function Player:init(...)
     self:addFX(GroundMaskFX())
 end
 
-function Player:interact()
-    if super.interact(self) then
-        return true
-    else
-        self.jump_buffer = 3
-    end
-end
 
 function Player:update()
     if self.oor_pos then
@@ -32,6 +25,13 @@ function Player:update()
         self.x = oor_pos[1]
         ::done::
         -- self.last_x, self.last_y = ox, oy
+    end
+    if self.is_player and self:isMovementEnabled() then
+        local button = Game:getPartyMember(self.party).button or "confirm"
+        if Input.pressed(button) then
+            Input.clear(button)
+            self.jump_buffer = 3
+        end
     end
     super.update(self)
     self.jump_buffer = self.jump_buffer - DTMULT
@@ -81,6 +81,9 @@ function Player:isOutOfRange()
             return true
         end
         if Utils.dist(self.x,0,follower.x,0) > 40 then
+            return true
+        end
+        if Utils.dist(self.x,self.y,follower.x,follower.y) > 60 then
             return true
         end
     end

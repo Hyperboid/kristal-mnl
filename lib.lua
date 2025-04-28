@@ -1,6 +1,11 @@
 local lib = {}
 
 function lib:init()
+    Utils.hook(Registry.getPartyMember("kris"), "init", function (orig, pm,...)
+        orig(pm,...)
+        -- Give Kris the worst case of Main Character Syndrome
+        pm.button = "confirm"
+    end)
     ---@diagnostic disable-next-line: param-type-mismatch
     Utils.hook(Collider, "thickness", 1, true)
     ---@diagnostic disable-next-line: param-type-mismatch

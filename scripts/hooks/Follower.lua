@@ -115,13 +115,13 @@ function Follower:update()
         elseif self.z < ground_level then
             self.z = ground_level
         elseif self.world.player:isMovementEnabled() then
-            if Input.pressed("cancel") then
+            local button = Game:getPartyMember(self.party).button or "confirm"
+            if Input.pressed(button) then
                 self:jump()
             end
         end
     end
 end
-
 
 function Follower:jump()
     self.z_vel = 3
