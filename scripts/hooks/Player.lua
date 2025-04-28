@@ -156,8 +156,23 @@ function Player:endAir()
     self.z_vel = 0
 end
 
+function Player:moveZ(z, speed)
+    z = (z or 0) * (speed or 1)
+    local dir = Utils.sign(z)
+    for i=1,z,dir do
+        
+        local prev_z = self.z
+        self.z = self.z + dir
+        if self:checkSolidCollision() then
+            self.z = prev_z
+            self.z_vel = math.abs(self.z_vel) * -dir
+            return
+        end
+    end
+end
+
 function Player:updateAir()
-    self.z = self.z + (self.z_vel * (DTMULT*4))
+    self:moveZ(self.z_vel * (DTMULT*4))
     self.z_vel = math.max(-10, self.z_vel - (DTMULT/3.5))
     if self:isMovementEnabled() then
         local x, y = self:getDesiredMovement(self.walk_speed)

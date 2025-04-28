@@ -60,4 +60,8 @@ function Object:getScreenPos()
     return x,y
 end
 
+function Object:moveZ(z, speed)
+    self.z = self.z + (z or 0) * (speed or 1)
+end
+
 return Object
