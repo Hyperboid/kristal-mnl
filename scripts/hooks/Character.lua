@@ -14,6 +14,11 @@ function Character:draw()
     super.draw(self)
 end
 
+function Character:setActor(actor)
+    super.setActor(self,actor)
+    self.collider.thickness = self.actor.hitbox_thickness or 1
+end
+
 
 function Character:doMoveAmount(type, amount, other_amount)
     other_amount = other_amount or 0
