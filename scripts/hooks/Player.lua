@@ -20,17 +20,29 @@ function Player:interact()
 end
 
 function Player:update()
-    -- ---@type Follower
-    -- local follower = self.world.followers[1]
-    -- if follower == self then follower = nil end
-    -- if follower then
-    --     follower:fullUpdate()
-    -- end
+    if self.oor_pos then
+        local oor_pos = self.oor_pos
+        self.oor_pos = nil
+        local ox, oy = self.x, self.y
+        self.x = oor_pos[1]
+        if not self:isOutOfRange() then goto done end
+        self.x = ox
+        self.y = oor_pos[2]
+        if not self:isOutOfRange() then print("a")goto done end
+        self.x = oor_pos[1]
+        ::done::
+        -- self.last_x, self.last_y = ox, oy
+    end
     super.update(self)
     self.jump_buffer = self.jump_buffer - DTMULT
-    -- if follower then
-    --     follower:fullUpdate()
-    -- end
+    -- BUG: This odd solution is intended to allow holding away from a hole
+    -- while the follower jumps out of it. However, this has the side effect
+    -- of preventing you from sliding on this invisible wall.
+    if self:isOutOfRange() then
+        self.oor_pos = {self.last_x, self.last_y}
+        self:setPosition(unpack(self.oor_pos))
+        self:updateHistory()
+    end
 end
 
 function Player:updateWalk()
@@ -61,11 +73,10 @@ function Player:getDesiredMovement(speed)
     return x, y
 end
 
-function Player:checkSolidCollision()
+function Player:isOutOfRange()
     ---@type Follower
     local follower = self.is_player and self.world.followers[1]
     if follower then
-        -- TODO: Make this try to move the follower
         if Utils.dist(0,self.y,0,follower.y) > 40 then
             return true
         end
@@ -73,7 +84,7 @@ function Player:checkSolidCollision()
             return true
         end
     end
-    return super.checkSolidCollision(self)
+    return false
 end
 
 function Player:handleMovement()
