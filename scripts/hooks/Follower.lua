@@ -47,7 +47,7 @@ end
 
 function Follower:moveToTarget(speed)
     if speed == nil then
-        speed = 8
+        speed = self.walk_speed * 2
     end
     if self:getTarget() then
         local tx, ty, facing, state, args = self:getTargetPosition()
