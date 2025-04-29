@@ -8,6 +8,7 @@ function chara:init()
     self:setActor("mario")
     self:setLightActor("mario_lw")
     self.button = "confirm"
+    self.jump_sound = "m_jump"
 end
 
 return chara

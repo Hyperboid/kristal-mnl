@@ -28,7 +28,7 @@ function Player:update()
         -- self.last_x, self.last_y = ox, oy
     end
     if self.is_player and self:isMovementEnabled() then
-        local button = Game:getPartyMember(self.party).button or "confirm"
+        local button = self:getPartyMember().button or "confirm"
         if Input.pressed(button) then
             self.jump_buffer = 3
         end
@@ -138,9 +138,14 @@ function Player:handleMovement()
     end
 end
 
+---@return PartyMember
+function Player:getPartyMember()
+    return Game:getPartyMember(self.party)
+end
+
 function Player:jump()
     self.z_vel = 3
-    Assets.playSound("jump", .5, 2)
+    Assets.playSound(self:getPartyMember().jump_sound, .5, 1)
     self.state_manager:setState("AIR")
 end
 
@@ -194,7 +199,7 @@ function Player:updateAir()
         self.z = ground_level
     elseif self.coyote_time > 0 then
         self.coyote_time = self.coyote_time - DT
-        local button = Game:getPartyMember(self.party).button or "confirm"
+        local button = self:getPartyMember().button or "confirm"
         print(button)
         if Input.pressed(button) then
             self:jump()

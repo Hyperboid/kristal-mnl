@@ -128,18 +128,12 @@ function Follower:update()
         elseif self.z < ground_level then
             self.z = ground_level
         elseif self.world.player:isMovementEnabled() then
-            local button = Game:getPartyMember(self.party).button or "confirm"
+            local button = self:getPartyMember().button or "confirm"
             if Input.pressed(button) then
                 self:jump()
             end
         end
     end
-end
-
-function Follower:jump()
-    self.z_vel = 3
-    Assets.playSound("jump", .5, 1.8)
-    self.state_manager:setState("AIR")
 end
 
 function Follower:beginAir()

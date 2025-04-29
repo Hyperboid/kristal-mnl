@@ -8,6 +8,7 @@ function chara:init()
     self:setActor("luigi_lw")
     self:setLightActor("luigi_lw")
     self.button = "cancel"
+    self.jump_sound = "l_jump"
 end
 
 return chara
