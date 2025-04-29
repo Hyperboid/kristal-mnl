@@ -6,7 +6,7 @@ function Player:init(...)
     self.z_vel = 0
     self.jump_buffer = -math.huge
     self.state_manager:addState("AIR", {update = self.updateAir, enter = self.beginAir, leave = self.endAir})
-    self.walk_speed = 6
+    self.walk_speed = 8
     self.force_walk = true
     self:addFX(GroundMaskFX())
 end
