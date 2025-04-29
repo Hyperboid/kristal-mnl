@@ -44,7 +44,7 @@ function Player:update()
         local o_dt, o_dtmult = DT, DTMULT
         DT, DTMULT = 0, 0
         self:updateHistory()
-        o_dt, o_dtmult = 0, 0
+        DT, DTMULT = o_dt, o_dtmult
     end
 end
 
