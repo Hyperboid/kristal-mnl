@@ -9,6 +9,7 @@ function Player:init(...)
     self.walk_speed = 8
     self.force_walk = true
     self:addFX(GroundMaskFX())
+    self.coyote_time = 0
 end
 
 
@@ -29,7 +30,6 @@ function Player:update()
     if self.is_player and self:isMovementEnabled() then
         local button = Game:getPartyMember(self.party).button or "confirm"
         if Input.pressed(button) then
-            Input.clear(button)
             self.jump_buffer = 3
         end
     end
@@ -52,11 +52,13 @@ function Player:updateWalk()
     super.updateWalk(self)
     local ground_level = self:getGroundLevel()
     if self.z > ground_level then
+        self.coyote_time = (3/30)
         self.state_manager:setState("AIR")
     elseif self.z < ground_level then
         self.z = ground_level
     elseif self.jump_buffer > 0 then
         self.jump_buffer = 0
+        self.coyote_time = 0
         self:jump()
     end
 end
@@ -145,6 +147,7 @@ end
 function Player:beginAir()
     -- self.physics.speed_x = (self.x - self.last_x)/DTMULT
     -- self.physics.speed_y = (self.y - self.last_y)/DTMULT
+
     self:setSprite("jump")
     if not self.sprite.texture then
         self:setSprite("walk/"..self.facing.."_2")
@@ -156,6 +159,7 @@ function Player:endAir()
     self.physics.speed_x = 0
     self.physics.speed_y = 0
     self.z_vel = 0
+    self.coyote_time = 0
 end
 
 function Player:moveZ(z, speed)
@@ -188,6 +192,13 @@ function Player:updateAir()
     if self.z < ground_level then
         self:setState("WALK")
         self.z = ground_level
+    elseif self.coyote_time > 0 then
+        self.coyote_time = self.coyote_time - DT
+        local button = Game:getPartyMember(self.party).button or "confirm"
+        print(button)
+        if Input.pressed(button) then
+            self:jump()
+        end
     end
 end
 
