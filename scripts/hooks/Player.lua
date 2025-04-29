@@ -200,7 +200,6 @@ function Player:updateAir()
     elseif self.coyote_time > 0 then
         self.coyote_time = self.coyote_time - DT
         local button = self:getPartyMember().button or "confirm"
-        print(button)
         if Input.pressed(button) then
             self:jump()
         end
