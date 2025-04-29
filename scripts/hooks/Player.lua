@@ -41,7 +41,10 @@ function Player:update()
     if self:isOutOfRange() then
         self.oor_pos = {self.last_x, self.last_y}
         self:setPosition(unpack(self.oor_pos))
+        local o_dt, o_dtmult = DT, DTMULT
+        DT, DTMULT = 0, 0
         self:updateHistory()
+        o_dt, o_dtmult = 0, 0
     end
 end
 
@@ -78,10 +81,10 @@ function Player:isOutOfRange()
     ---@type Follower
     local follower = self.is_player and self.world.followers[1]
     if follower then
-        if Utils.dist(0,self.y,0,follower.y) > (self.walk_speed*6) then
+        if Utils.dist(0,self.y,0,follower.y) > (self.walk_speed*6) + 4 then
             return true
         end
-        if Utils.dist(self.x,0,follower.x,0) > (self.walk_speed*6) then
+        if Utils.dist(self.x,0,follower.x,0) > (self.walk_speed*6) + 4 then
             return true
         end
         if Utils.dist(self.x,self.y,follower.x,follower.y) > (self.walk_speed*self.walk_speed*6) then
