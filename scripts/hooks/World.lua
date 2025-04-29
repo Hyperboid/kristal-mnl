@@ -58,4 +58,9 @@ function World:sortChildren()
     Utils.popPerformance()
 end
 
+function World:openMenu(menu, layer)
+    if self.player and self.player.state_manager.state ~= "WALK" then return end
+    return super.openMenu(self,menu,layer)
+end
+
 return World
