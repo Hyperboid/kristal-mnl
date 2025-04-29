@@ -81,13 +81,11 @@ function Player:isOutOfRange()
     ---@type Follower
     local follower = self.is_player and self.world.followers[1]
     if follower then
-        if Utils.dist(0,self.y,0,follower.y) > (self.walk_speed*6) + 4 then
+        local dist = ((self.walk_speed * 15) * FOLLOW_DELAY) + self.walk_speed
+        if Utils.dist(0,self.y,0,follower.y) > dist then
             return true
         end
-        if Utils.dist(self.x,0,follower.x,0) > (self.walk_speed*6) + 4 then
-            return true
-        end
-        if Utils.dist(self.x,self.y,follower.x,follower.y) > (self.walk_speed*self.walk_speed*6) then
+        if Utils.dist(self.x,0,follower.x,0) > dist then
             return true
         end
     end
