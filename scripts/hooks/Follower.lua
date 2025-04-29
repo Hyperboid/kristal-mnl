@@ -14,6 +14,19 @@ function Follower:init(...)
     self.following = true
     -- self.active = false
     -- self.timescale = 0.5
+    self.follow_delay = FOLLOW_DELAY
+end
+
+function Follower:getFollowDelay()
+    local total_delay = 0
+
+    for i,v in ipairs(self.world.followers) do
+        total_delay = total_delay + v.follow_delay
+
+        if v == self then break end
+    end
+
+    return total_delay
 end
 
 function Follower:updateIndex() end
@@ -30,7 +43,7 @@ function Follower:updateHistory(moved, auto)
         self.history_time = self.history_time + DT
 
         table.insert(self.history, 1, {x = target.x, y = target.y, facing = target.facing, time = self.history_time, state = target.state, state_args = target.state_manager.args, auto = auto})
-        while (self.history_time - self.history[#self.history].time) > (Game.max_followers * FOLLOW_DELAY) do
+        while (self.history_time - self.history[#self.history].time) > (Game.max_followers * self:getFollowDelay()) do
             table.remove(self.history, #self.history)
         end
 
@@ -72,7 +85,7 @@ function Follower:moveToTarget(speed)
 end
 
 function Follower:getTargetPosition()
-    local follow_delay = FOLLOW_DELAY/2
+    local follow_delay = self:getFollowDelay()/2
     local tx, ty, facing, state, args = self.x, self.y, self.facing, nil, {}
     for i,v in ipairs(self.history) do
         tx, ty, facing, state, args = v.x, v.y, v.facing, v.state, v.state_args
