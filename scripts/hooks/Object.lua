@@ -40,7 +40,7 @@ function Object:getGroundLevel()
     for index, plane in ipairs(self.stage:getObjects(GroundPlane)) do
         ---@cast plane GroundPlane
         if self:collidesWith(plane) then
-            max_z = math.max(max_z, plane.target_z)
+            max_z = math.max(max_z, plane:getHeightFor(self))
         end
     end
     _G.Object.endCache()

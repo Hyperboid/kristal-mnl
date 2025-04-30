@@ -50,4 +50,9 @@ function GroundPlane:drawMask(object)
     love.graphics.rectangle("fill", 0,top,w,h-top)
 end
 
+---@param object Object
+function GroundPlane:getHeightFor(object)
+    return self.target_z
+end
+
 return GroundPlane
