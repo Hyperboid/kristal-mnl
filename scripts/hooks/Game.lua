@@ -1,4 +1,6 @@
 ---@class Game : Game
+---@diagnostic disable-next-line: duplicate-doc-field
+---@field battle Battle|MNLBattle
 local Game, super = Utils.hookScript(Game)
 
 local function r_includes(getter, check, class)

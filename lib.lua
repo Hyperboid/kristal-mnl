@@ -1,4 +1,8 @@
+---@class MNLLibrary
 local lib = {}
+
+Registry.registerGlobal("MNL", lib)
+MNL = lib
 
 function lib:init()
     Utils.hook(Registry.getPartyMember("kris"), "init", function (orig, pm,...)
@@ -28,9 +32,9 @@ function lib:init()
             local own_z = self:getZ()
             local other_z = other:getZ()
             -- TODO: fix this shit
+            ---@diagnostic disable-next-line: redundant-return-value
             return Utils.between(own_z, other_z - 1, other_z + other.thickness + self.thickness, true)
                 or Utils.between(other_z, own_z - 1, own_z + self.thickness + other.thickness, true)
-            
         end)
         ::continue::
     end
@@ -41,6 +45,35 @@ function lib:loadObject(world, name, data)
         local z = data.properties.z or 0
         return GroundPlane(data.x,data.y + z+z,data.width, data.height, z)
     end
+end
+
+function lib:onRegisterEnemies()
+    self.enemies = {}
+
+    for _,path,enemy in Registry.iterScripts("battle/mnlenemies") do
+        assert(enemy ~= nil, '"enemies/'..path..'.lua" does not return value')
+        enemy.id = enemy.id or path
+        self.enemies[enemy.id] = enemy
+    end
+end
+
+---@generic T:MNLEnemyBattler
+---@param id MNLEnemyBattler.`T`
+---@param ... any
+---@return T
+function lib:createEnemy(id, ...)
+    if self.enemies[id] then
+        return self.enemies[id](...)
+    else
+        error("Attempt to create non existent enemy \"" .. tostring(id) .. "\"")
+    end
+end
+
+---@generic T:MNLEnemyBattler
+---@param id MNLEnemyBattler.`T`
+---@return T
+function lib:getEnemy(id)
+    return self.enemies[id]
 end
 
 return lib
