@@ -32,7 +32,11 @@ function MNLBattle:postInit(state, encounter)
     end
     ---@cast encounter MNLEncounter
     self.encounter = encounter
-    self:setState(state)
+    if state == "TRANSITION" then
+        self.intro = self:addChild(MNLBattleIntro(self.encounter.intro_type))
+    else
+        self:onStateChange(nil, state)
+    end
 end
 
 --- Changes the state of the battle and calls [onStateChange()](lua://Battle.onStateChange)
@@ -46,9 +50,6 @@ function MNLBattle:setState(state, reason)
 end
 
 function MNLBattle:onStateChange(old, new)
-    if new == "TRANSITION" then
-        self.intro = self:addChild(MNLBattleIntro(self.encounter.intro_type))
-    end
 end
 
 return MNLBattle
