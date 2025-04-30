@@ -20,7 +20,7 @@ function World:checkCollision(collider, ...)
         ---@cast plane GroundPlane
         if plane:collidesWith(collider) then
             floor_found = true
-            if plane:getHeightFor(collider.parent) > (collider.parent.z) then
+            if plane:getHeightFor(collider.parent) > ((collider.parent.z)+3) then
                 Object.endCache()
                 return true
             end

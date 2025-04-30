@@ -52,11 +52,16 @@ function Player:updateWalk()
     super.updateWalk(self)
     local ground_level = self:getGroundLevel()
     if self.z > ground_level then
-        self.coyote_time = (3/30)
-        self.state_manager:setState("AIR")
+        if (self.z - ground_level) > 3 then
+            self.coyote_time = (3/30)
+            self.state_manager:setState("AIR")
+        else
+            self.z = ground_level
+        end
     elseif self.z < ground_level then
         self.z = ground_level
-    elseif self.jump_buffer > 0 then
+    end
+    if self.jump_buffer > 0 then
         self.jump_buffer = 0
         self.coyote_time = 0
         self:jump()
@@ -204,6 +209,15 @@ function Player:updateAir()
         if Input.pressed(button) then
             self:jump()
         end
+    end
+end
+
+function Player:draw()
+    super.draw(self)
+    if DEBUG_RENDER and self.is_player then
+        love.graphics.scale(0.5)
+        love.graphics.setFont(Assets.getFont("main_mono", 16))
+        love.graphics.print(self.state_manager.state.."\n"..self.z.."\n"..self:getGroundLevel().."\n"..self.jump_buffer)
     end
 end
 
