@@ -2,10 +2,11 @@
 ---@field intro_type MNLEncounter.__intro_type
 local MNLBattleIntro, super = Class(Object)
 
-function MNLBattleIntro:init(intro_type, mid_callback)
+function MNLBattleIntro:init(intro_type, mid_callback, end_callback)
     super.init(self)
     self.intro_type = intro_type
     self.mid_callback = mid_callback
+    self.end_callback = end_callback
     self.anim_timer = 0
 end
 
@@ -15,6 +16,10 @@ function MNLBattleIntro:update()
         self.mid_callback()
     end
     self.halfdone = self.anim_timer >= 1
+    if self.anim_timer >= 5 then
+        if self.end_callback then self.end_callback() end
+        self:remove()
+    end
 end
 
 function MNLBattleIntro:draw()
