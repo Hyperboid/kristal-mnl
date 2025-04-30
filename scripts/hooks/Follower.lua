@@ -2,7 +2,7 @@ if not CLASS_NAME_GETTER("Player").updateAir then
     error{included = "Player"}
 end
 ---@class Follower : Player
-local Follower, super = Class("Player")
+local Follower, super = Class({CLASS_NAME_GETTER"Player", Follower})
 
 function Follower:init(...)
     super.init(self,...)
@@ -60,7 +60,7 @@ end
 
 function Follower:moveToTarget(speed)
     if speed == nil then
-        speed = self.walk_speed * 2
+        speed = self.walk_speed * 1
     end
     if self:getTarget() then
         local tx, ty, facing, state, args = self:getTargetPosition()
@@ -134,22 +134,6 @@ function Follower:update()
             end
         end
     end
-end
-
-function Follower:beginAir()
-    -- self.physics.speed_x = (self.x - self.last_x)/DTMULT
-    -- self.physics.speed_y = (self.y - self.last_y)/DTMULT
-    self:setSprite("jump")
-    if not self.sprite.texture then
-        self:setSprite("walk/"..self.facing.."_2")
-    end
-end
-
-function Follower:endAir()
-    self:resetSprite()
-    self.physics.speed_x = 0
-    self.physics.speed_y = 0
-    self.z_vel = 0
 end
 
 return Follower
