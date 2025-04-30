@@ -12,7 +12,6 @@ function ChaserEnemy:onCollide(player)
     if self:isActive() and player:includes(Player) then
         ---@cast player Player
         local stomped = player.z_vel < 0
-        player.sprite:flash()
         self.encountered = true
         ---@type string|Encounter
         local encounter = self.encounter
