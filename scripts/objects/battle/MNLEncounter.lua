@@ -53,7 +53,7 @@ function MNLEncounter:onActionSelect(battler, button) end
 ---@param y? number
 ---@param ... any   Additional arguments to pass to [`EnemyBattler:init()`](lua://EnemyBattler.init).
 ---@return EnemyBattler
-function Encounter:addEnemy(enemy, x, y, ...)
+function MNLEncounter:addEnemy(enemy, x, y, ...)
     local enemy_obj
     if type(enemy) == "string" then
         enemy_obj = MNL:createEnemy(enemy, ...)
