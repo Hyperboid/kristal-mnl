@@ -63,4 +63,14 @@ function World:openMenu(menu, layer)
     return super.openMenu(self,menu,layer)
 end
 
+function World:spawnFollower(chara, options)
+    local f = super.spawnFollower(self, chara, options)
+    local dx, dy = Utils.getFacingVector(f.facing)
+    local dist = (((self.player.walk_speed * 15) * FOLLOW_DELAY))
+    f.x = f.x - (dx*dist)
+    f.y = f.y - (dy*dist)
+    f:interpolateHistory()
+    return f
+end
+
 return World
