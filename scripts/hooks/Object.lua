@@ -7,9 +7,18 @@ function Object:init(...)
     super.init(self,...)
 end
 
-function Object:preDraw(...)
-    love.graphics.translate(0, -self.z*2)
-    super.preDraw(self, ...)
+function Object:preDraw(dont_transform, ...)
+    if self.drawShadow then
+        love.graphics.push()
+        super.preDraw(self, dont_transform, ...)
+        self:drawShadow()
+        Draw.setColor(self:getDrawColor())
+        love.graphics.pop()
+    end
+    if not dont_transform then
+        love.graphics.translate(0, -self.z*2)
+    end
+    super.preDraw(self, dont_transform, ...)
     -- super.applyTransformTo(self, transform, ...)
 end
 
