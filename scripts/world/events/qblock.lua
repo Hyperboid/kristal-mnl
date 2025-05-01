@@ -9,12 +9,19 @@ function event:init(data)
     self:addChild(self.sprite)
     self.sprite:setScale(2)
     self.solid = true
-    self:move(0,-20)
-    self.ground_collider = Hitbox(self, 0,0,self.width,self.height)
+    self:move(0,10)
+    self.sprite:move(0,10)
+    local h = self.height/2
+    self.ground_collider = Hitbox(self, 0,h,self.width,h)
     self.ground_collider.thickness = 30
-    self:setHitbox(0,0,self.width,self.height)
+    self:setHitbox(0,h,self.width,h)
     self.collider.thickness = 1
     self.collider.z = -2
+    self:setOrigin(0,1)
+end
+
+function event:getDebugRectangle()
+    return {0, self.height/4, self.width, self.height*1.5}
 end
 
 function event:drawShadow()
