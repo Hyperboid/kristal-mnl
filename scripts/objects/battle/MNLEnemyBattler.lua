@@ -9,7 +9,11 @@ function MNLEnemyBattler:init(actor, use_overlay)
     if actor then
         self:setActor(actor, use_overlay)
     end
+    self.speed = 0
+end
 
+function MNLEnemyBattler:getSpeed()
+    return self.speed
 end
 
 return MNLEnemyBattler

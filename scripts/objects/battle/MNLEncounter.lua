@@ -7,6 +7,7 @@ local MNLEncounter, super = Class()
 function MNLEncounter:init()
     super.init(self)
     self.intro_type = "normal"
+    self.music = "battle"
 end
 
 -- Callbacks
@@ -70,7 +71,7 @@ function MNLEncounter:addEnemy(enemy, x, y, ...)
     end
     x, y = x or (550 + (10 * #enemies)), y or (200 + (45 * #enemies))
     if transition then
-        enemy_obj:setPosition(SCREEN_WIDTH + 200, y)
+        enemy_obj:setPosition(x + 200, y)
     end
     enemy_obj.target_x = x
     enemy_obj.target_y = y
@@ -89,5 +90,27 @@ function MNLEncounter:addEnemy(enemy, x, y, ...)
 end
 
 function MNLEncounter:update() end
+
+function MNLEncounter:getPartyPosition(index)
+    local x, y = 0, 0
+    if #Game.battle.party == 1 then
+        x = 80
+        y = 140
+    elseif #Game.battle.party == 2 then
+        x = 80
+        y = 100 + (160 * (index - 1))
+    elseif #Game.battle.party == 3 then
+        x = 80
+        y = 50 + (160 * (index - 1))
+    end
+
+    local battler = Game.battle.party[index]
+    local ox, oy = battler.chara:getBattleOffset()
+    x = x + (battler.actor:getWidth()/2 + ox) * 2
+    y = y + (battler.actor:getHeight()  + oy) * 2
+    x = 65
+    return x, y
+    -- return 50, 50
+end
 
 return MNLEncounter
