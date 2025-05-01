@@ -26,6 +26,7 @@ function MNLBattle:onKeyPressed(key, is_repeat)
             end
         end
     end
+    self.state_manager:call("keypressed", key, is_repeat)
 end
 
 function MNLBattle:postInit(state, encounter)
@@ -43,7 +44,9 @@ function MNLBattle:postInit(state, encounter)
         table.insert(self.party,battler)
         battler.x, battler.y = self.encounter:getPartyPosition(index)
         battler.target_x, battler.target_y = battler.x, battler.y
-        battler.x = -200
+        if state == "TRANSITION" then
+            battler.x = battler.x - 200
+        end
     end
 
     if Game.world.music:isPlaying() and self.encounter.music then

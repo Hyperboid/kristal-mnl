@@ -10,6 +10,7 @@ function MNLPartyBattler:init(chara, x, y)
 
     super.init(self, x, y, self.actor:getSize())
     self:setActor(self.actor, true)
+    self.sprite:setFacing("right")
     self:setAnimation("battle/idle")
 end
 
