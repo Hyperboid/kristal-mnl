@@ -15,7 +15,7 @@ function lib:init()
     ---@diagnostic disable-next-line: param-type-mismatch
     Utils.hook(Collider, "z", 1, true)
     Utils.hook(Collider, "getZ", function (orig, self)
-        return (self.parent and self.parent.z or 0) + self.z
+        return ((self.parent and self.parent.z or 0) + self.z) + self.thickness
     end)
     Utils.hook(Collider, "getTransform", function (orig, self)
         if self.parent then self.parent.no_3d = true end
