@@ -24,6 +24,8 @@ function event:postLoad()
     if self:getFlag("used_once") then
         self.sprite:set("world/events/qblock/used")
     end
+    self.z = self.z + 10
+    self.y = self.y + 20
     self.init_z = self.z
 end
 
