@@ -12,12 +12,58 @@ function event:init(data)
     self:move(0,10)
     self.sprite:move(0,10)
     local h = self.height/2
-    self.ground_collider = Hitbox(self, 0,h,self.width,h)
+    self.ground_collider = Hitbox(self, 1,h+1,self.width-2,h-1)
     self.ground_collider.thickness = 30
-    self:setHitbox(0,h,self.width,h)
+    self:setHitbox(1,h+1,self.width-2,h-1)
     self.collider.thickness = 1
-    self.collider.z = -2
+    self.collider.z = -5
     self:setOrigin(0,1)
+end
+
+function event:postLoad()
+    if self:getFlag("used_once") then
+        self.sprite:set("world/events/qblock/used")
+    end
+    self.init_z = self.z
+end
+
+function event:onHit(object, hit_type)
+    if hit_type == "hammer" or object.z < (self.z-10) then
+        Assets.playSound("bump")
+        -- if self.bumping then return end
+        local resume
+        resume = coroutine.wrap(function ()
+            self.bumping = true
+            self.sprite.z = 0
+            if self.timer_handle then self.world.map.timer:cancel(self.timer_handle) end
+            self.timer_handle = self.world.map.timer:tween(.1, self.sprite, {
+                z = 0 + 10
+            }, "out-quad", resume)
+            coroutine.yield()
+            if self:getFlag("used_once", false) then
+                self.world.timer:after(.1,resume)
+                coroutine.yield()
+            else
+                self:setFlag("used_once", true)
+                self:doItem(resume)
+            end
+            self.timer_handle = self.world.map.timer:tween(.1, self.sprite, {
+                z = 0
+            }, "in-quad", resume)
+            self.sprite:set("world/events/qblock/used")
+            coroutine.yield()
+            self.bumping = false
+        end)
+        resume()
+    end
+end
+
+function event:doItem(resume)
+    -- TODO: spawn a coin sprite here
+    Assets.playSound("bell")
+    Game.money = Game.money + 1
+    self.world.timer:after(.1,resume)
+    coroutine.yield()
 end
 
 function event:getDebugRectangle()

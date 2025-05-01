@@ -179,7 +179,11 @@ function Player:moveZ(z, speed)
         
         local prev_z = self.z
         self.z = self.z + dir
-        if self:checkSolidCollision() then
+        local collided, collided_object = self:checkSolidCollision()
+        if collided then
+            if collided_object and collided_object.onHit then
+                collided_object:onHit(self, "jump")
+            end
             if self:getGroundLevel() >= self.z then
                 self:setState("WALK")
             else
@@ -194,15 +198,20 @@ end
 function Player:updateAir()
     if self:isMovementEnabled() then
         self:moveZ(self.z_vel * (DTMULT*4))
+        if not NOCLIP then
         self.z_vel = math.max(-10, self.z_vel - (DTMULT/3.5))
+        end
         local x, y = self:getDesiredMovement(self.walk_speed)
         self:move(x,y, DTMULT * self.walk_speed)
     end
-    local ground_level = self:getGroundLevel()
+    local ground_level, ground_obj = self:getGroundLevel()
     if self.z < ground_level then
         self:setState("WALK")
         self.z_vel = 0
         self.z = ground_level
+        if ground_obj and ground_obj.onHit then
+            ground_obj:onHit(self, "jump")
+        end
     elseif self.coyote_time > 0 then
         self.coyote_time = self.coyote_time - DT
         local button = self:getPartyMember().button or "confirm"

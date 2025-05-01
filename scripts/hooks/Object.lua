@@ -46,12 +46,14 @@ function Object:getGroundLevel()
     if not self.stage then return 0 end
     _G.Object.startCache()
     local max_z = -math.huge
+    local ground_obj
     for index, plane in ipairs(self.stage:getObjects()) do
         ---@cast plane GroundPlane
-        if plane ~= self and  plane.getHeightFor and self:collidesWith(plane.ground_collider or plane) then
-            if (plane:includes(GroundPlane) or true) then
-                
-                max_z = math.max(max_z, plane:getHeightFor(self))
+        if plane ~= self and plane.getHeightFor and self:collidesWith(plane.ground_collider or plane) then
+            local plane_height = plane:getHeightFor(self)
+            if plane_height >= max_z then
+                max_z = plane_height
+                ground_obj = plane
             end
         end
     end
@@ -63,7 +65,7 @@ function Object:getGroundLevel()
             max_z = self.z
         end
     end
-    return max_z
+    return max_z, ground_obj
 end
 
 function Object:getScreenPos()

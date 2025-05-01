@@ -4,9 +4,12 @@ local World, super = Class("World")
 
 function World:checkCollision(collider, ...)
     Object.startCache()
-    if super.checkCollision(self, collider, ...) then
-        Object.endCache()
-        return true
+    do
+        local collided, with = super.checkCollision(self, collider, ...)
+        if collided then
+            Object.endCache()
+            return true, with
+        end
     end
     if not self.stage then
         Object.endCache()
@@ -22,7 +25,7 @@ function World:checkCollision(collider, ...)
             floor_found = true
             if plane:getHeightFor(collider.parent) > ((collider.parent.z)+3) then
                 Object.endCache()
-                return true
+                return true, plane
             end
         end
     end
