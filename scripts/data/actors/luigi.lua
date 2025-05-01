@@ -7,8 +7,8 @@ function actor:init()
     self.path = "party/luigi/dark"
     self.default = "walk"
     self.width = 22
-    self.height = 46
-    self.hitbox = {3,41,16,5}
+    self.height = 44
+    self.hitbox = {3,39,16,5}
     self.hitbox_thickness = 21
     self.color = {1, 0, 0}
 end
