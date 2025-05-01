@@ -16,9 +16,9 @@ function World:checkCollision(collider, ...)
     if self.map.data and self.map.data.properties and self.map.data.properties.floor then
         floor_found = true
     end
-    for _, plane in ipairs(self.stage:getObjects(GroundPlane)) do
+    for _, plane in ipairs(self.stage:getObjects()) do
         ---@cast plane GroundPlane
-        if plane:collidesWith(collider) then
+        if plane.getHeightFor and plane:collidesWith(collider) then
             floor_found = true
             if plane:getHeightFor(collider.parent) > ((collider.parent.z)+3) then
                 Object.endCache()
