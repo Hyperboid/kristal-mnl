@@ -12,7 +12,6 @@ return {
   nextlayerid = 7,
   nextobjectid = 24,
   properties = {
-    ["floor"] = 0,
     ["name"] = "Test Map - Room 2"
   },
   tilesets = {

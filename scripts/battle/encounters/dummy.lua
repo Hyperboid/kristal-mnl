@@ -1,4 +1,4 @@
-local Dummy, super = Class(Encounter)
+local Dummy, super = Class(MNLEncounter)
 
 function Dummy:init()
     super.init(self)

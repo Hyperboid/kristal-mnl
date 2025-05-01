@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="20" height="24" tilewidth="40" tileheight="40" infinite="0" nextlayerid="9" nextobjectid="43">
+<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="20" height="24" tilewidth="40" tileheight="40" infinite="0" nextlayerid="9" nextobjectid="49">
  <editorsettings>
   <export target="room1.lua" format="lua"/>
  </editorsettings>
@@ -142,9 +142,34 @@ no-good wall slammers.</property>
    </properties>
    <point/>
   </object>
+  <object id="43" name="qblock" x="440" y="160" width="40" height="40">
+   <properties>
+    <property name="z" type="int" value="60"/>
+   </properties>
+  </object>
+  <object id="44" x="592" y="-95" height="2"/>
+  <object id="45" name="qblock" x="360" y="200" width="40" height="40">
+   <properties>
+    <property name="z" type="int" value="40"/>
+   </properties>
+  </object>
+  <object id="46" name="qblock" x="280" y="240" width="40" height="40">
+   <properties>
+    <property name="z" type="int" value="20"/>
+   </properties>
+  </object>
+  <object id="47" name="qblock" x="520" y="120" width="40" height="40">
+   <properties>
+    <property name="z" type="int" value="80"/>
+   </properties>
+  </object>
+  <object id="48" name="qblock" x="200" y="280" width="40" height="40">
+   <properties>
+    <property name="z" type="int" value="0"/>
+   </properties>
+  </object>
  </objectgroup>
- <objectgroup id="6" name="objects_above">
- </objectgroup>
+ <objectgroup id="6" name="objects_above"/>
  <objectgroup color="#7f00ff" id="5" name="markers">
   <object id="20" name="spawn" x="300" y="250">
    <point/>

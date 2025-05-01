@@ -10,7 +10,7 @@ return {
   tilewidth = 40,
   tileheight = 40,
   nextlayerid = 9,
-  nextobjectid = 43,
+  nextobjectid = 49,
   properties = {
     ["floor"] = 0,
     ["light"] = true,
@@ -555,6 +555,94 @@ return {
             ["actor"] = "wall",
             ["flagcheck"] = "wall_hit",
             ["text1"] = "* I Am the Wall Guardian.[wait:5]\n* This Wall is Off Limits for you\nno-good wall slammers."
+          }
+        },
+        {
+          id = 43,
+          name = "qblock",
+          type = "",
+          shape = "rectangle",
+          x = 440,
+          y = 160,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["z"] = 60
+          }
+        },
+        {
+          id = 44,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 592,
+          y = -95,
+          width = 0,
+          height = 2,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 45,
+          name = "qblock",
+          type = "",
+          shape = "rectangle",
+          x = 360,
+          y = 200,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["z"] = 40
+          }
+        },
+        {
+          id = 46,
+          name = "qblock",
+          type = "",
+          shape = "rectangle",
+          x = 280,
+          y = 240,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["z"] = 20
+          }
+        },
+        {
+          id = 47,
+          name = "qblock",
+          type = "",
+          shape = "rectangle",
+          x = 520,
+          y = 120,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["z"] = 80
+          }
+        },
+        {
+          id = 48,
+          name = "qblock",
+          type = "",
+          shape = "rectangle",
+          x = 200,
+          y = 280,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["z"] = 0
           }
         }
       }
