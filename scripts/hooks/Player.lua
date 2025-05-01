@@ -221,4 +221,33 @@ function Player:draw()
     end
 end
 
+function Player:findInteractable()
+    if not self.is_player then return end
+    Object.startCache()
+    local interactables = {}
+    local col = self.interact_collider[self.facing]
+    for _, obj in ipairs(self.world.children) do
+        if obj.onInteract and obj:collidesWith(col) then
+            Object.endCache()
+            return obj
+        end
+    end
+    Object.endCache()
+end
+
+function Player:getDesiredAction()
+    if self.state_manager.state == "AIR" then
+        return "none"
+    end
+    local interactable = self:findInteractable()
+    if interactable then
+        if interactable:includes(Character) then
+            return "talk"
+        else
+            return "interact"
+        end
+    end
+    return "jump"
+end
+
 return Player

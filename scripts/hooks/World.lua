@@ -30,6 +30,16 @@ function World:checkCollision(collider, ...)
     return not floor_found
 end
 
+function World:init(map)
+    super.init(self, map)
+    self.buttonprompt = MNLButtonPrompt()
+    self.buttonprompt:setParallax(0)
+    self.buttonprompt.layer = WORLD_LAYERS["below_ui"] - 1
+    self.buttonprompt.persistent = true
+    self.buttonprompt.world = self
+    self:addChild(self.buttonprompt)
+end
+
 function World:sortChildren()
     Utils.pushPerformance("mnl/World#sortChildren")
     Object.startCache()
