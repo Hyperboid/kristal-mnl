@@ -36,6 +36,20 @@ function lib:init()
             return Utils.between(own_z, other_z - 1, other_z + other.thickness + self.thickness, true)
                 or Utils.between(other_z, own_z - 1, own_z + self.thickness + other.thickness, true)
         end)
+        if Kristal.getLibConfig("mnl", "draw_extruded_colliders") then
+            Utils.hook(class, "draw", function (orig, self, r,g,b,a)
+                if type(r) == "table" then r,g,b,a = Utils.unpackColor(r) end
+                love.graphics.push()
+                orig(self, r,g,b,a)
+                for i=1,math.min(100,self.thickness)-.5,.5 do
+                    love.graphics.translate(0, -1)
+                    orig(self, r,g,b,(a or 1)/5)
+                end
+                love.graphics.translate(0, -1)
+                orig(self, r,g,b,a)
+                love.graphics.pop()
+            end)
+        end
         ::continue::
     end
 end
