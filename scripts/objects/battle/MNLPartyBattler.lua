@@ -16,6 +16,7 @@ function MNLPartyBattler:init(chara, x, y)
     self:setActor(self.actor, true)
     self.sprite:setFacing("right")
     self:setAnimation("battle/idle")
+    self.gravity, self.jump_velocity = MNL:getJumpPhysics((2.5)*20, .2)
 end
 
 function MNLPartyBattler:onButtonPressed()
@@ -28,7 +29,7 @@ end
 
 function MNLPartyBattler:onButtonPressed()
     if self.state == "STANDING" then
-        self.z_vel = 3
+        self.z_vel = self.jump_velocity
         Assets.playSound(self.chara.jump_sound, 1, 1)
         self:setState("AIR")
     end
@@ -65,9 +66,9 @@ function MNLPartyBattler:moveZ(z, speed)
 end
 
 function MNLPartyBattler:updateAir()
-    self:moveZ((self.z_vel * (DTMULT*4)))
+    self:moveZ((self.z_vel * (DT)))
     if not NOCLIP then
-    self.z_vel = math.max(-10, self.z_vel - (DTMULT/2))
+        self.z_vel = math.max(-300, self.z_vel - (self.gravity*DT))
     end
     if self.z <= 0 then
         self.z = 0
