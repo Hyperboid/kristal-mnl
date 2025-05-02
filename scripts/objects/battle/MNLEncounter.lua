@@ -108,9 +108,16 @@ function MNLEncounter:getPartyPosition(index)
     local ox, oy = battler.chara:getBattleOffset()
     x = x + (battler.actor:getWidth()/2 + ox) * 2
     y = y + (battler.actor:getHeight()  + oy) * 2
-    x = 65
     return x, y
     -- return 50, 50
+end
+
+function MNLEncounter:drawBackground() end
+function MNLEncounter:draw()
+end
+
+function MNLEncounter:setFlag(flag, value)
+    
 end
 
 return MNLEncounter

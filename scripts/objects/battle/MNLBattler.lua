@@ -6,6 +6,14 @@ function MNLBattler:init(x,y, width, height)
     self.boss = false
 end
 
+function MNLBattler:onAdd(parent)
+    super.onAdd(self, parent)
+    if parent:includes(MNLBattle) then
+        ---@cast parent MNLBattle
+        self.battle = parent
+    end
+end
+
 function MNLBattler:walkToSpeed(x,y,speed,after)
     return self:slideToSpeed(x,y,speed,after)
 end
