@@ -42,9 +42,9 @@ function MNLEncounter:beforeStateChange(old, new) end
 ---@param new string
 function MNLEncounter:onStateChange(old, new) end
 
---- *(Override)* Called when an [`ActionButton`](lua://ActionButton.init) is selected.
+--- *(Override)* Called when an [`MNLActionBlock`](lua://MNLActionBlock.init) is selected.
 ---@param battler   PartyBattler
----@param button    ActionButton
+---@param button    MNLActionBlock
 function MNLEncounter:onActionSelect(battler, button) end
 
 

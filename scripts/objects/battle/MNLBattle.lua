@@ -9,9 +9,11 @@ function MNLBattle:init()
     ---@type MNLEnemyBattler[]
     self.enemies = {}
     self.action_select = MNLBattleActionSelect(self)
+    self.enemy_select = MNLBattleEnemySelect(self)
     self.state_manager = StateManager("", self, true)
     self.state_manager:addState("INTRO", {update = self.updateIntro})
     self.state_manager:addState("ACTIONSELECT", self.action_select)
+    self.state_manager:addState("ENEMYSELECT", self.enemy_select)
     self.music = Music()
     self.timer = self:addChild(Timer())
 end
@@ -69,6 +71,7 @@ function MNLBattle:onKeyPressed(key, is_repeat)
             NOCLIP = not NOCLIP
         end
     end
+    if self.state_manager:call("keypressed", key, is_repeat) then return end
     if (self.state ~= "MENU" and self.state ~= "INTRO" and self.state ~= "TRANSITION") and not is_repeat then
         for _, party in ipairs(self.party) do
             if not party.is_down and Input.is(party.chara.button, key) then
@@ -77,7 +80,6 @@ function MNLBattle:onKeyPressed(key, is_repeat)
             end
         end
     end
-    self.state_manager:call("keypressed", key, is_repeat)
 end
 
 function MNLBattle:postInit(state, encounter)
@@ -197,7 +199,6 @@ function MNLBattle:getNextBattler()
     table.sort(battlers, function (a, b)
         return a:getSpeed() < b:getSpeed()
     end)
-    print(Utils.dump(battlers))
     if self.current_battler then
         return battlers[(Utils.getIndex(battlers, self.current_battler)%#battlers)+1]
     end

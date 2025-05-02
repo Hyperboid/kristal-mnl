@@ -21,14 +21,20 @@ function MNLBattleActionSelect:registerEvents()
 end
 
 function MNLBattleActionSelect:onKeyPressed(key)
-    -- if self.rotation_timer ~= math.floor(self.rotation_timer) then return end
+    if (Input.is(self.battler.chara.button, key) or (self.battler.chara.button == key)) then
+        if (self.rotation_timer ~= 0) then
+            return true
+        end
+    elseif self.battler.state_manager.state == "AIR" then
+        return
+    end
     if Input.is("left", key) then
         self.selected_button = Utils.clampWrap(self.selected_button + 1, 1, #self.buttons)
         self.rotation_timer = self.rotation_timer - 1
         if self.rotation_handle then
             self.battle.timer:cancel(self.rotation_handle)
         end
-        self.rotation_handle = self.battle.timer:tween(0.2, self, {rotation_timer = 0},"out-quad")
+        self.rotation_handle = self.battle.timer:tween(0.15, self, {rotation_timer = 0},"out-quad")
         Assets.playSound("ui_move")
     end
     if Input.is("right", key) then
@@ -37,7 +43,7 @@ function MNLBattleActionSelect:onKeyPressed(key)
         if self.rotation_handle then
             self.battle.timer:cancel(self.rotation_handle)
         end
-        self.rotation_handle = self.battle.timer:tween(0.2, self, {rotation_timer = 0},"out-quad")
+        self.rotation_handle = self.battle.timer:tween(0.15, self, {rotation_timer = 0},"out-quad")
         Assets.playSound("ui_move")
     end
 end
@@ -58,6 +64,12 @@ function MNLBattleActionSelect:update()
     for index, button in ipairs(self.buttons) do
         button:setPosition(self:getButtonPos(index, button))
     end
+    if self.battler.z > 20 then
+        self.battler.z = 20
+        self.battler.z_vel = 0
+        self.buttons[self.selected_button]:select()
+        Assets.stopAndPlaySound("ui_select")
+    end
 end
 
 function MNLBattleActionSelect:getButtonPos(index, button)
@@ -75,9 +87,10 @@ function MNLBattleActionSelect:createButtons()
         button:remove()
     end
 
+    ---@type MNLActionBlock[]
     self.buttons = {}
 
-    local btn_types = {"jump", "hammer", "special", "flee", "item"}
+    local btn_types = {"jump", "hammer", "special", "item", "flee"}
 
     for lib_id,_ in Kristal.iterLibraries() do
         btn_types = Kristal.libCall(lib_id, "getMNLActionBlocks", self.battler, btn_types) or btn_types
