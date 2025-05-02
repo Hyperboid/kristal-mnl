@@ -63,7 +63,7 @@ end
 function MNLBattleActionSelect:getButtonPos(index, button)
     return self.helper_transform:reset()
         :translate(self.battler:getPosition())
-        :translate(self.battler:getScaledWidth() / -2, -(self.radius*2))
+        :translate(self.battler:getScaledWidth() / -2, -(self.radius*5))
         :scale(4,2)
         :rotate(((index + (-(self.selected_button+self.rotation_timer))) / #self.buttons) * math.pi*2)
         :transformPoint(0, self.radius)
@@ -77,7 +77,7 @@ function MNLBattleActionSelect:createButtons()
 
     self.buttons = {}
 
-    local btn_types = {"jump", "hammer", "special", "flee", "flee", "flee", "flee"}
+    local btn_types = {"jump", "hammer", "special", "flee", "item"}
 
     for lib_id,_ in Kristal.iterLibraries() do
         btn_types = Kristal.libCall(lib_id, "getMNLActionBlocks", self.battler, btn_types) or btn_types
@@ -93,7 +93,7 @@ function MNLBattleActionSelect:createButtons()
     for i,btn in ipairs(btn_types) do
         if type(btn) == "string" then
             local button = MNLActionBlock(btn, self.battler, math.floor(start_x + ((i - 1) * 35)) + 0.5, 21)
-            button.z = 70
+            button.z = 50
             button.actbox = self
             table.insert(self.buttons, button)
             self.battle:addChild(button)
