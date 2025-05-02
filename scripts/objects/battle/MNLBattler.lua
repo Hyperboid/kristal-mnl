@@ -23,4 +23,17 @@ function MNLBattler:getSpeed()
     return 0
 end
 
+function MNLBattler:setActor(actor, use_overlay)
+    super.setActor(self, actor, use_overlay)
+    self:setHitbox(self.actor:getHitbox())
+    self.collider.thickness = self.actor.hitbox_thickness or self.collider.thickness
+end
+
+function MNLBattler:draw()
+    super.draw(self)
+    if DEBUG_RENDER and self.collider then
+        self.collider:drawFor(self, COLORS.lime)
+    end
+end
+
 return MNLBattler
