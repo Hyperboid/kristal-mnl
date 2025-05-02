@@ -150,7 +150,7 @@ end
 
 function Player:jump()
     self.z_vel = 3
-    Assets.playSound(self:getPartyMember().jump_sound, .5, 1)
+    Assets.playSound(self:getPartyMember().jump_sound, 1, 1)
     self.state_manager:setState("AIR")
 end
 
