@@ -205,7 +205,7 @@ function Player:updateAir()
         self:move(x,y, DTMULT * self.walk_speed)
     end
     local ground_level, ground_obj = self:getGroundLevel()
-    if self.z < ground_level then
+    if self.z < ground_level and self.z_vel <= 0 then
         self:setState("WALK")
         self.z_vel = 0
         self.z = ground_level
