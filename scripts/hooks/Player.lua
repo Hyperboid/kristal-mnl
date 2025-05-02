@@ -10,6 +10,7 @@ function Player:init(...)
     self.force_walk = true
     self:addFX(GroundMaskFX())
     self.coyote_time = 0
+    self.gravity, self.jump_velocity = MNL:getJumpPhysics((3.2)*20, .35)
 end
 
 
@@ -149,7 +150,7 @@ function Player:getPartyMember()
 end
 
 function Player:jump()
-    self.z_vel = 3
+    self.z_vel = self.jump_velocity
     Assets.playSound(self:getPartyMember().jump_sound, 1, 1)
     self.state_manager:setState("AIR")
 end
@@ -197,9 +198,9 @@ end
 
 function Player:updateAir()
     if self:isMovementEnabled() then
-        self:moveZ(self.z_vel * (DTMULT*4))
+        self:moveZ(self.z_vel * DT)
         if not NOCLIP then
-        self.z_vel = math.max(-10, self.z_vel - (DTMULT/3.5))
+        self.z_vel = math.max(-300, self.z_vel - (self.gravity*DT))
         end
         local x, y = self:getDesiredMovement(self.walk_speed)
         self:move(x,y, DTMULT * self.walk_speed)
@@ -226,7 +227,7 @@ function Player:draw()
     if DEBUG_RENDER and self.is_player then
         love.graphics.scale(0.5)
         love.graphics.setFont(Assets.getFont("main_mono", 16))
-        love.graphics.print(self.state_manager.state.."\n"..self.z.."\n"..self:getGroundLevel().."\n"..self.jump_buffer)
+        love.graphics.print(self.state_manager.state.."\n"..self.z.."\n"..self.z_vel.."\n"..self.jump_buffer)
     end
 end
 

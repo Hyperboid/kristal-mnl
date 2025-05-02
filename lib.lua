@@ -90,4 +90,10 @@ function lib:getEnemy(id)
     return self.enemies[id]
 end
 
+function lib:getJumpPhysics(H, T)
+    local g = (2*H)/(T^2)
+    local v = math.sqrt(2*g*H)
+    return g, v
+end
+
 return lib
