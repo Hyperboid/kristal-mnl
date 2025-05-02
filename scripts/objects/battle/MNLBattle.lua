@@ -201,7 +201,7 @@ function MNLBattle:getNextBattler()
     ---@type (MNLPartyBattler|MNLEnemyBattler)[]
     local battlers = Utils.mergeMultiple(self.party, self.enemies)
     table.sort(battlers, function (a, b)
-        return a:getSpeed() < b:getSpeed()
+        return a:getSpeed() > b:getSpeed()
     end)
     if self.current_battler then
         return battlers[(Utils.getIndex(battlers, self.current_battler)%#battlers)+1]
