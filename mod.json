@@ -62,6 +62,9 @@
     "config": {
         "kristal": {
             // End of config
+        },
+        "mnl": {
+            "draw_extruded_colliders": true
         }
     }
 }

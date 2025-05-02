@@ -18,4 +18,11 @@ function Dummy:init()
     --self:addEnemy("dummy")
 end
 
+function Dummy:drawBackground()
+    Draw.setColor(COLORS.white(0.1))
+    for i=0.1,1.2,0.1 do
+        love.graphics.ellipse("fill", SCREEN_WIDTH/2, SCREEN_HEIGHT/2, SCREEN_WIDTH*i, SCREEN_HEIGHT*i/2)
+    end
+end
+
 return Dummy
