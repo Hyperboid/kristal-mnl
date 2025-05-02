@@ -16,4 +16,8 @@ function MNLEnemyBattler:getSpeed()
     return self.speed
 end
 
+function MNLEnemyBattler:getAttackerPosition()
+    return self.x-100, self.y
+end
+
 return MNLEnemyBattler

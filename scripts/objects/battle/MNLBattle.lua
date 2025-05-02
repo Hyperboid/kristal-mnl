@@ -12,10 +12,12 @@ function MNLBattle:init()
     self.enemy_select = MNLBattleEnemySelect(self)
     self.state_manager = StateManager("", self, true)
     self.state_manager:addState("INTRO", {update = self.updateIntro})
+    self.state_manager:addState("ACTIONS", {enter = self.beginActions})
     self.state_manager:addState("ACTIONSELECT", self.action_select)
     self.state_manager:addState("ENEMYSELECT", self.enemy_select)
     self.music = Music()
     self.timer = self:addChild(Timer())
+    self.last_button_pressed = {}
 end
 
 function MNLBattle:isWorldHidden()
@@ -76,6 +78,7 @@ function MNLBattle:onKeyPressed(key, is_repeat)
         for _, party in ipairs(self.party) do
             if not party.is_down and Input.is(party.chara.button, key) then
                 party:onButtonPressed()
+                self.last_button_pressed[party] = RUNTIME
                 break
             end
         end
@@ -95,6 +98,7 @@ function MNLBattle:postInit(state, encounter)
         self:addChild(battler)
         
         table.insert(self.party,battler)
+        self.last_button_pressed[battler] = 0
         battler.x, battler.y = self.encounter:getPartyPosition(index)
         battler.target_x, battler.target_y = battler.x, battler.y
         if state == "TRANSITION" then
@@ -206,6 +210,15 @@ function MNLBattle:getNextBattler()
 end
 
 function MNLBattle:startNextTurn()
+    if self.current_battler then
+        if self.current_battler.target_x and self.current_battler.target_y then
+            self.current_battler:setPosition(self.current_battler.target_x, self.current_battler.target_y)
+        end
+        self.current_battler:resetPhysics()
+        if self.current_battler:includes(MNLPartyBattler) then
+            self.current_battler:setState("STANDING")
+        end
+    end
     self.current_battler = self:getNextBattler()
 
     if self.current_battler:includes(MNLEnemyBattler) then
@@ -227,6 +240,93 @@ function MNLBattle:returnToWorld()
     end
     Game.battle = nil
     Game.state = "OVERWORLD"
+end
+
+function MNLBattle:runCoroutine(f, ...)
+    local resumed_running = false
+    local thread = coroutine.create(f)
+    local resume = function (...)
+        if coroutine.status(thread) == "dead" then return end
+        if coroutine.status(thread) == "running" then
+            resumed_running = true
+            return
+        end
+        local ok, msg = coroutine.resume(thread, ...)
+        if not ok then
+            COROUTINE_TRACEBACK = debug.traceback(thread)
+            error(msg)
+        end
+    end
+    local function await(handle, ...)
+        if resumed_running then
+            resumed_running = false
+            return
+        end
+        if type(handle) == "table" and handle.after ~= resume then
+            handle.after = Utils.override(handle.after, function (orig, ...)
+                resume()
+                orig(...)
+            end)
+        end
+        return coroutine.yield(handle, ...)
+    end
+    resume(self, await, resume, ...)
+    return thread, await, resume
+end
+
+function MNLBattle:onConfirmEnemy(target)
+    self:setState("ACTIONS", nil, self.state_reason, self.current_battler, target)
+end
+
+function MNLBattle:beginActions(prev, action_type, user, target)
+    if action_type == "JUMP" then
+        self:runCoroutine(self.handleJumpAttack, self.current_battler, target)
+    end
+end
+
+---@async
+---@param await async fun(...)
+---@param resume fun()
+---@param party MNLPartyBattler
+---@param enemy MNLEnemyBattler
+function MNLBattle:handleJumpAttack(await, resume, party, enemy)
+    await(self.timer:afterCond(function ()
+        return party.state == "STANDING"
+    end, resume))
+    party:setState("ACTIONS")
+    local x,y = enemy:getAttackerPosition()
+    await(party:walkToSpeed(x, y, 10, resume))
+    await(party:setAnimation("battle/jump_ready", resume))
+    local t = 0.3
+    self.timer:tween(t*1.9, party, {x = enemy.x})
+    for i = 1, 2 do
+        
+        await(self.timer:tween(t, party, {
+            z = (enemy.collider.thickness*2) + 50,
+        }, "out-quad"))
+        await(self.timer:tween(t, party, {
+            z = (enemy.collider.thickness*2),
+        }, "in-quad"))
+        if (RUNTIME - self.last_button_pressed[party] ) < 0.3 then
+            enemy:explode(nil, nil, true)
+        else
+
+            break
+        end
+    end
+    await(self.timer:after(0))
+    local htween = self.timer:tween(t*1.9, party, {x = party.target_x, y = party.target_y})
+    await(self.timer:after(0))
+
+    await(self.timer:tween(t, party, {
+        z = (enemy.collider.thickness*2) + 50,
+    }, "out-quad"))
+    await(self.timer:tween(t, party, {
+        z = 0,
+    }, "in-quad"))
+    self.timer:cancel(htween)
+    await(self.timer:after(0))
+    self:startNextTurn()
 end
 
 return MNLBattle

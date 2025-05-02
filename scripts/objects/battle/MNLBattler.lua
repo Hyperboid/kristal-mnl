@@ -36,4 +36,10 @@ function MNLBattler:draw()
     end
 end
 
+
+function MNLBattler:drawShadow()
+    Draw.setColor(COLORS.black(.2))
+    love.graphics.ellipse("fill", (self.width/2), self.height + 0 * -2, 8,4)
+end
+
 return MNLBattler
