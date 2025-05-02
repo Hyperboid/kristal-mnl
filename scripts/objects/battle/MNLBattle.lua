@@ -219,7 +219,11 @@ function MNLBattle:startNextTurn()
             self.current_battler:setState("STANDING")
         end
     end
+    local prev_battler = self.current_battler
     self.current_battler = self:getNextBattler()
+
+    if self.encounter:onTurnStart(prev_battler, self.current_battler) then return end
+
 
     if self.current_battler:includes(MNLEnemyBattler) then
         self:setState("ENEMYACTION")

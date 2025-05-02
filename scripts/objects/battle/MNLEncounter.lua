@@ -21,8 +21,10 @@ function MNLEncounter:onBattleStart() end
 --- *(Override)* Called when the battle is completed and the victory text (if presesnt) is advanced, just before the transition out.
 function MNLEncounter:onBattleEnd() end
 
---- *(Override)* Called at the start of each new turn, just before the player starts choosing actions.
-function MNLEncounter:onTurnStart() end
+--- *(Override)* Called at the start of each new turn, just before the player starts choosing an action, or an enemy starts attacking.
+---@param prev_battler MNLPartyBattler|MNLEnemyBattler
+---@param battler MNLPartyBattler|MNLEnemyBattler
+function MNLEncounter:onTurnStart(prev_battler, battler) end
 --- *(Override)* Called at the end of each turn, at the same time all waves end.
 function MNLEncounter:onTurnEnd() end
 
