@@ -90,10 +90,16 @@ function lib:getEnemy(id)
     return self.enemies[id]
 end
 
-function lib:getJumpPhysics(H, T)
-    local g = (2*H)/(T^2)
-    local v = math.sqrt(2*g*H)
+function lib:getJumpPhysics(h, t)
+    local g = (2*h)/(t^2)
+    local v = math.sqrt(2*g*h)
     return g, v
+end
+
+function lib:getJumpDuration(g, h)
+    local v = math.sqrt(2*g*h)
+    local t = math.sqrt((2*h)/g)
+    return t, v -- TV!?!? LIKE TENNA VISION!?!?!!??!?!?!? THE SONG BY SHAY!?!?!?!? HOLY FUCK
 end
 
 return lib
