@@ -82,4 +82,10 @@ function Object:moveZ(z, speed)
     self.z = self.z + (z or 0) * (speed or 1)
 end
 
+function Object:explode(x, y, dont_remove, options)
+    local explosion = super.explode(self, x, y, dont_remove, options)
+    explosion.z = self.z
+    return explosion
+end
+
 return Object
