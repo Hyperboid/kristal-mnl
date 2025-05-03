@@ -309,10 +309,10 @@ function MNLBattle:handleJumpAttack(await, resume, party, enemy)
     for i = 1, 2 do
         
         await(self.timer:tween(t, party, {
-            z = (enemy.collider.thickness*2) + 50,
+            z = ((enemy.collider.thickness*2)+enemy.z) + 50,
         }, "out-quad"))
         await(self.timer:tween(t, party, {
-            z = (enemy.collider.thickness*2),
+            z = ((enemy.collider.thickness*2)+enemy.z),
         }, "in-quad"))
         if (RUNTIME - self.last_button_pressed[party] ) < 0.3 then
             enemy:explode(nil, nil, true)
@@ -326,7 +326,7 @@ function MNLBattle:handleJumpAttack(await, resume, party, enemy)
     await(self.timer:after(0))
 
     await(self.timer:tween(t, party, {
-        z = (enemy.collider.thickness*2) + 50,
+        z = ((enemy.collider.thickness*2)+enemy.z) + 50,
     }, "out-quad"))
     await(self.timer:tween(t, party, {
         z = 0,
