@@ -10,6 +10,14 @@ function MNLEnemyBattler:init(actor, use_overlay)
         self:setActor(actor, use_overlay)
     end
     self.speed = 0
+    self.attack = 1
+    self.level = 1
+    self.defense = 3
+    self.max_health = 60
+end
+
+function MNLEnemyBattler:postInit()
+    self.health = self.health or self.max_health
 end
 
 function MNLEnemyBattler:getSpeed()
@@ -18,6 +26,26 @@ end
 
 function MNLEnemyBattler:getAttackerPosition()
     return self.x-100, self.y
+end
+
+---@param damage number
+---@param battler MNLPartyBattler
+function MNLEnemyBattler:getAttackDamage(damage, battler)
+    return MNL:getAttackDamage(battler, self, damage)
+end
+
+function MNLEnemyBattler:getStat(name, default)
+    if name == "speed" then
+        return self.speed
+    elseif name == "health" then
+        return self.max_health
+    elseif name == "attack" then
+        return self.attack
+    elseif name == "defense" then
+        return self.defense
+    elseif name == "level" then
+        return self.level
+    end
 end
 
 return MNLEnemyBattler

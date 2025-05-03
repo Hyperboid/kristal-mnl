@@ -77,4 +77,8 @@ function MNLPartyBattler:updateAir()
     end
 end
 
+function MNLPartyBattler:getStat(name, default)
+    return self.chara:getStat(name, default)
+end
+
 return MNLPartyBattler

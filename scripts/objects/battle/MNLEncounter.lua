@@ -81,6 +81,7 @@ function MNLEncounter:addEnemy(enemy, x, y, ...)
         enemy_obj:setPosition(x, y)
     end
     enemy_obj.encounter = self
+    enemy_obj:postInit()
     table.insert(enemies, enemy_obj)
     if enemies_index then
         table.insert(enemies_index, enemy_obj)
