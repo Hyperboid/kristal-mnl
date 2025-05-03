@@ -22,7 +22,7 @@ end
 
 function MNLBattleActionSelect:onKeyPressed(key)
     if (Input.is(self.battler.chara.button, key) or (self.battler.chara.button == key)) then
-        if (self.rotation_timer ~= 0) then
+        if (math.abs(self.rotation_timer) > 0.01) then
             return true
         end
     elseif self.battler.state_manager.state == "AIR" then
@@ -52,6 +52,11 @@ end
 function MNLBattleActionSelect:onEnter(prev_state, battler)
     self.battler = battler
     self:createButtons()
+    if self.rotation_handle then
+        self.battle.timer:cancel(self.rotation_handle)
+    end
+    self.rotation_timer = #self.buttons
+    self.rotation_handle = self.battle.timer:tween(.5, self, {rotation_timer = 0},"out-quad")
 end
 
 function MNLBattleActionSelect:onLeave()
