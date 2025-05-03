@@ -112,6 +112,9 @@ function MNLBattle:postInit(state, encounter)
     end
     if state == "TRANSITION" then
         self.intro = self:addChild(MNLBattleIntro(self.encounter.intro_type, function ()
+            if self.encounter.music then
+                self.music:play(self.encounter.music)
+            end
             -- TODO: make cool background appear here
         end, function ()
             self:setState("INTRO")
@@ -131,7 +134,7 @@ end
 
 function MNLBattle:onStateChange(old, new)
     if new == "INTRO" then
-        if self.encounter.music then
+        if self.encounter.music and not self.music:isPlaying() then
             self.music:play(self.encounter.music)
         end
         for _, battler in ipairs(Utils.mergeMultiple(self.party, self.enemies)) do
