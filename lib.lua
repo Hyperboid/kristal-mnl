@@ -102,4 +102,14 @@ function lib:getJumpDuration(g, h)
     return t, v -- TV!?!? LIKE TENNA VISION!?!?!!??!?!?!? THE SONG BY SHAY!?!?!?!? HOLY FUCK
 end
 
+lib.DEFENSE_CONSTANT = 100
+--- Returns damage that an attacker will deal to a target.
+--- TODO: Adjust this to fit better with M&L gameplay
+---@param attacker MNLPartyBattler|MNLEnemyBattler
+---@param target MNLPartyBattler|MNLEnemyBattler
+---@param attack_constant any
+function lib:getAttackDamage(attacker, target, attack_constant)
+    return Utils.round((attacker:getStat("attack", 1) * (self.DEFENSE_CONSTANT / (self.DEFENSE_CONSTANT + target:getStat("defense", 0)))) * attack_constant)
+end
+
 return lib
