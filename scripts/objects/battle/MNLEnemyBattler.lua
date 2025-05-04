@@ -14,6 +14,7 @@ function MNLEnemyBattler:init(actor, use_overlay)
     self.level = 1
     self.defense = 3
     self.max_health = 60
+    self.extra_stats = {}
 end
 
 function MNLEnemyBattler:postInit()
@@ -45,6 +46,10 @@ function MNLEnemyBattler:getStat(name, default)
         return self.defense
     elseif name == "level" then
         return self.level
+    elseif self.extra_stats[name] then
+        return self.extra_stats[name]
+    else
+        return default
     end
 end
 
