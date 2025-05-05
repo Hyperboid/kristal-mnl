@@ -11,11 +11,7 @@ function Dummy:init()
     -- Enables the purple grid battle background
     self.background = true
 
-    -- Add the dummy enemy to the encounter
-    self:addEnemy("dummy")
-
-    --- Uncomment this line to add another!
-    --self:addEnemy("dummy")
+    self:addEnemy("dummy", 510, 240)
 end
 
 function Dummy:drawBackground()
