@@ -9,6 +9,7 @@ end
 ---@param parent MNLEnemyBattler
 function MNLWave:setParent(parent)
     self.parent = parent
+    self.battle = self.parent.battle or self.battle
 end
 
 function MNLWave:update()
@@ -66,8 +67,8 @@ function MNLWave:onStart()
 end
 
 ---@async
----@param await async fun(...) asD
----@param resume fun()
+---@param await async fun(...) Yields the coroutine. If passed a timer handle, will automatically add resume as a callback.
+---@param resume fun() Resumes the coroutine after having yielded. Can also prevent yielding from the next await.
 function MNLWave:run(await, resume)
     await(self.timer:after(0))
     self:finish()
