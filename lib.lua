@@ -93,6 +93,19 @@ function lib:onRegisterWaves()
     end
 end
 
+---@generic T:MNLWave
+---@param id MNLWave.`T`
+---@param ... any
+---@return T
+function lib:createWave(id, ...)
+    if self.waves[id] then
+        return self.waves[id](...)
+    else
+        error("Attempt to create non existent wave \"" .. tostring(id) .. "\"")
+    end
+end
+
+
 ---@generic T:MNLEnemyBattler
 ---@param id MNLEnemyBattler.`T`
 ---@return T
