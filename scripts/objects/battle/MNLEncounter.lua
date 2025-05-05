@@ -7,7 +7,7 @@ local MNLEncounter, super = Class()
 function MNLEncounter:init()
     super.init(self)
     self.intro_type = "normal"
-    self.music = "battle"
+    self.music = "battle_mnl"
 end
 
 -- Callbacks

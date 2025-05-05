@@ -5,7 +5,7 @@
         "Hyperboid",
         "BrendaK7200", // Most Mario sprites
         "Celestialdark", // Luigi sprites
-        "Gen Handle", // The name, some UI sprites
+        "Gen Handle", // The name, default battle music, some UI sprites
     ],
     "keybinds": [
         {
