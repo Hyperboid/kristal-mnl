@@ -15,6 +15,7 @@ function MNLEnemyBattler:init(actor, use_overlay)
     self.defense = 3
     self.max_health = 60
     self.extra_stats = {}
+    self.waves = {}
 end
 
 function MNLEnemyBattler:postInit()
@@ -71,7 +72,17 @@ function MNLEnemyBattler:setWave(wave)
 end
 
 function MNLEnemyBattler:selectWave()
-    self:setWave(MNLWave())
+    
+    self:setWave((Utils.pick(self:getNextWaves())) or MNLWave())
+end
+
+function MNLEnemyBattler:getNextWaves()
+    if self.wave_override then
+        local wave = self.wave_override
+        self.wave_override = nil
+        return {wave}
+    end
+    return self.waves
 end
 
 return MNLEnemyBattler
