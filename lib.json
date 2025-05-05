@@ -1,10 +1,11 @@
 {
     "id": "mnl",
-    "name": "Mario & Luigi",
+    "name": "Wonder Seed",
     "authors": [
         "Hyperboid",
         "BrendaK7200", // Most Mario sprites
         "Celestialdark", // Luigi sprites
+        "Gen Handle", // The name
     ],
     "keybinds": [
         {
