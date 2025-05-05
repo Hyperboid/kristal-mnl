@@ -16,6 +16,9 @@ function Dummy:init()
     self.defense = 4
     -- Enemy reward
     self.money = 40
+    self.waves = {
+        "basic",
+    }
 end
 
 return Dummy
