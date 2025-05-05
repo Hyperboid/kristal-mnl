@@ -53,4 +53,25 @@ function MNLEnemyBattler:getStat(name, default)
     end
 end
 
+function MNLEnemyBattler:update()
+    if self.wave then
+        self.wave:update()
+    end
+    super.update(self)
+end
+
+---@param wave MNLWave
+function MNLEnemyBattler:setWave(wave)
+    if type(wave) == "string" then
+        wave = MNL:createWave(wave)
+    end
+    self.wave = wave
+    self.wave:setParent(self)
+    self.wave:onStart()
+end
+
+function MNLEnemyBattler:selectWave()
+    self:setWave(MNLWave())
+end
+
 return MNLEnemyBattler

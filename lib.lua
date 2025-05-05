@@ -65,7 +65,7 @@ function lib:onRegisterEnemies()
     self.enemies = {}
 
     for _,path,enemy in Registry.iterScripts("battle/mnlenemies") do
-        assert(enemy ~= nil, '"enemies/'..path..'.lua" does not return value')
+        assert(enemy ~= nil, '"mnlenemies/'..path..'.lua" does not return value')
         enemy.id = enemy.id or path
         self.enemies[enemy.id] = enemy
     end
@@ -80,6 +80,16 @@ function lib:createEnemy(id, ...)
         return self.enemies[id](...)
     else
         error("Attempt to create non existent enemy \"" .. tostring(id) .. "\"")
+    end
+end
+
+function lib:onRegisterWaves()
+    self.waves = {}
+
+    for _,path,enemy in Registry.iterScripts("battle/mnlwaves") do
+        assert(enemy ~= nil, '"mnlwaves/'..path..'.lua" does not return value')
+        enemy.id = enemy.id or path
+        self.waves[enemy.id] = enemy
     end
 end
 

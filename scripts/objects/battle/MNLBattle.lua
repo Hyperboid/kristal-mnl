@@ -142,6 +142,9 @@ function MNLBattle:onStateChange(old, new)
             battler:walkToSpeed(battler.target_x, battler.target_y, 8)
         end
     end
+    if new == "ENEMYACTION" then
+        self.current_battler:selectWave()
+    end
 end
 
 function MNLBattle:update()
@@ -229,7 +232,7 @@ function MNLBattle:startNextTurn()
 
 
     if self.current_battler:includes(MNLEnemyBattler) then
-        self:setState("ENEMYACTION")
+        self:setState("ENEMYACTION", nil, self.current_battler)
     else
         self:setState("ACTIONSELECT", nil, self.current_battler)
     end
