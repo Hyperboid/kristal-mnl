@@ -86,4 +86,10 @@ function World:spawnFollower(chara, options)
     return f
 end
 
+function World:onKeyPressed(key)
+    if Input.is("actionswap", key) then
+    end
+    return super.onKeyPressed(self, key)
+end
+
 return World

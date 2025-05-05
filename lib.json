@@ -5,5 +5,13 @@
         "Hyperboid",
         "BrendaK7200", // Most Mario sprites
         "Celestialdark", // Luigi sprites
+    ],
+    "keybinds": [
+        {
+            "name": "Swap Actions",
+            "id": "actionswap",
+            "keys": ["v"],
+            "gamepad": ["gamepad:leftshoulder"]
+        }
     ]
 }
