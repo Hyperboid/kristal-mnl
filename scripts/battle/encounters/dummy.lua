@@ -6,8 +6,8 @@ function Dummy:init()
     -- Text displayed at the bottom of the screen at the start of the encounter
     self.text = "* The tutorial begins...?"
 
-    -- Battle music ("battle" is rude buster)
-    self.music = "battle"
+    -- Battle music ("battle_mnl" is Wondrous Encounter)
+    self.music = "battle_mnl"
     -- Enables the purple grid battle background
     self.background = true
 
