@@ -32,7 +32,15 @@ function MNLButtonPrompt:draw()
             sprite = "ui/btn/luigi"
         end
         if sprite and x and y then
-            Draw.draw(Assets.getFramesOrTexture(sprite.."/"..chara:getDesiredAction())[1], x,y)
+            local action = chara:getDesiredAction()
+            Draw.setColor(Game:getPartyMember(chara.party):getColor())
+            if action == "none" then
+                Draw.draw(Assets.getFramesOrTexture("ui/btn/action/none")[1], x,y)
+            else
+                Draw.draw(Assets.getFramesOrTexture("ui/btn/action/base")[1], x,y)
+                Draw.setColor(COLORS.white)
+                Draw.draw(Assets.getFramesOrTexture("ui/btn/action/"..action)[1], x,y)
+            end
         end
     end
     love.graphics.pop()
