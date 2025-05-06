@@ -28,10 +28,13 @@ function Player:update()
         ::done::
         -- self.last_x, self.last_y = ox, oy
     end
+    self.desired_action = self:getDesiredAction()
     if self.is_player and self:isMovementEnabled() then
         local button = self:getPartyMember().button or "confirm"
         if Input.pressed(button) then
-            self.jump_buffer = 3
+            if self:doAction(self.desired_action) then
+                Input.clear(button, true)
+            end
         end
     end
     super.update(self)
@@ -258,6 +261,23 @@ function Player:getDesiredAction()
         end
     end
     return "jump"
+end
+
+function Player:interact()
+    -- Do nothing to override default behavior
+end
+
+function Player:doInteract()
+    super.interact(self)
+end
+
+function Player:doAction(action)
+    if action == "jump" then
+        self.jump_buffer = 3
+    elseif self.is_player and (action == "interact" or action == "talk") then
+        self:doInteract()
+        return true
+    end
 end
 
 return Player
