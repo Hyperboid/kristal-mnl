@@ -43,6 +43,31 @@ function World:init(map)
     self:addChild(self.buttonprompt)
 end
 
+function World:setupMap(map, ...)
+    super.setupMap(self, map, ...)
+    self.action_pages = self:getActionPages()
+    self.action_index = 1
+end
+
+function World:toggleActions()
+    self.action_pages = self:getActionPages()
+    local action_count = #self.action_pages
+    if action_count > 1 then
+        self.action_index = Utils.clampWrap(self.action_index + 1, 1, action_count)
+        Assets.playSound("noise")
+    end
+end
+
+function World:getActionPages()
+    local pages = {"jump"}
+    if Game:getFlag("has_hammers") then table.insert(pages, "hammer") end
+    return pages
+end
+---@return "jump"|"hammer"
+function World:getActionPage()
+    return self.action_pages[self.action_index]
+end
+
 function World:sortChildren()
     Utils.pushPerformance("mnl/World#sortChildren")
     Object.startCache()
@@ -88,6 +113,7 @@ end
 
 function World:onKeyPressed(key)
     if Input.is("actionswap", key) then
+        self:toggleActions()
     end
     return super.onKeyPressed(self, key)
 end

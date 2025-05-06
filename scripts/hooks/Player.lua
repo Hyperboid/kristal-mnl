@@ -1,4 +1,5 @@
 ---@class Player : Player
+---@field world World
 local Player, super = Class(Player)
 
 function Player:init(...)
@@ -29,7 +30,7 @@ function Player:update()
         -- self.last_x, self.last_y = ox, oy
     end
     self.desired_action = self:getDesiredAction()
-    if self.is_player and self:isMovementEnabled() then
+    if self.world.player:isMovementEnabled() then
         local button = self:getPartyMember().button or "confirm"
         if Input.pressed(button) then
             if self:doAction(self.desired_action) then
@@ -249,18 +250,18 @@ function Player:findInteractable()
 end
 
 function Player:getDesiredAction()
-    if self.state_manager.state == "AIR" then
-        return "none"
-    end
-    local interactable = self:findInteractable()
-    if interactable then
-        if interactable:includes(Character) then
-            return "talk"
-        else
-            return "interact"
+    if self.world.action_index == 1 then
+        local interactable = self:findInteractable()
+        if interactable then
+            if interactable:includes(Character) then
+                return "talk"
+            else
+                return "interact"
+            end
         end
+        return "jump"
+        
     end
-    return "jump"
 end
 
 function Player:interact()
@@ -272,8 +273,9 @@ function Player:doInteract()
 end
 
 function Player:doAction(action)
+    if (action or "none") == "none" then return end
     if action == "jump" then
-        self.jump_buffer = 3
+        self.jump_buffer = 10
     elseif self.is_player and (action == "interact" or action == "talk") then
         self:doInteract()
         return true

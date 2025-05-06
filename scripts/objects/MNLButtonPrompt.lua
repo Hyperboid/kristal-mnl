@@ -34,7 +34,7 @@ function MNLButtonPrompt:draw()
         if sprite and x and y then
             local action = chara.desired_action or chara:getDesiredAction()
             Draw.setColor(Game:getPartyMember(chara.party):getColor())
-            if action == "none" then
+            if action == "none" or not action then
                 Draw.draw(Assets.getFramesOrTexture("ui/btn/action/none")[1], x,y)
             else
                 Draw.draw(Assets.getFramesOrTexture("ui/btn/action/base")[1], x,y)
