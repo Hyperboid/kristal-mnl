@@ -9,7 +9,7 @@ function actor:init()
     self.width = 22
     self.height = 42
     self.hitbox = {3,37,16,5}
-    self.hitbox_thickness = 21
+    self.hitbox_thickness = 14
     self.color = {1, 0, 0}
     self.offsets = {
         ["hammer"] = {-25, -25}

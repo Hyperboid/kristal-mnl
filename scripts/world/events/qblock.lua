@@ -12,11 +12,11 @@ function event:init(data)
     self:move(0,10)
     self.sprite:move(0,10)
     local h = self.height/2
-    self.ground_collider = Hitbox(self, 1,h+1,self.width-2,h-1)
+    self.ground_collider = Hitbox(self, 1,h+11,self.width-2,h-1)
     self.ground_collider.thickness = 30
-    self:setHitbox(1,h+1,self.width-2,h-1)
-    self.collider.thickness = 1
-    self.collider.z = -5
+    self:setHitbox(1,h+11,self.width-2,h-1)
+    self.collider.thickness = 10
+    self.collider.z = -20
     self:setOrigin(0,1)
 end
 
@@ -75,6 +75,10 @@ end
 function event:drawShadow()
     Draw.setColor(COLORS.black(.2))
     love.graphics.ellipse("fill", (self.width/2), self.height + self:getGroundLevel() * -2, 16,8)
+end
+
+function event:getSortPosition()
+    return self.x, self.y-8
 end
 
 function event:getHeightFor(object)

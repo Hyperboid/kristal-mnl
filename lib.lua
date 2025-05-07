@@ -40,6 +40,7 @@ function lib:init()
             Utils.hook(class, "draw", function (orig, self, r,g,b,a)
                 if type(r) == "table" then r,g,b,a = Utils.unpackColor(r) end
                 love.graphics.push()
+                love.graphics.translate(0, -self.z)
                 orig(self, r,g,b,a)
                 for i=1,math.min(100,self.thickness)-.5,.5 do
                     love.graphics.translate(0, -1)
