@@ -104,7 +104,7 @@ end
 function MNLEnemyBattler:hurt(amount)
     -- Placeholder
     local info = debug.getinfo(2)
-    print("Hurting" .. self.id .. " for "..amount .. " hp @ " .. info.source..":"..info.currentline)
+    print("Hurting " .. self.id .. " for "..amount .. " hp @ " .. info.source..":"..info.currentline)
     -- Will return a MNLDamageNumber once that exists
     return Object()
 end
