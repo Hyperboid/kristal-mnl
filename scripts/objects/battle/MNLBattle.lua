@@ -304,10 +304,11 @@ function MNLBattle:handleJumpAttack(await, resume, party, enemy)
         return party.state == "STANDING"
     end, resume))
     party:setState("ACTIONS")
+    local attack_constant = 0.5
     local x,y = enemy:getAttackerPosition()
-    await(party:walkToSpeed(x, y, 10, resume))
+    await(party:walkToSpeed(x, y+1, 10, resume))
     await(party:setAnimation("battle/jump_ready", resume))
-    local t = 0.3
+    local t = 0.35
     self.timer:tween(t*1.9, party, {x = enemy.x})
     for i = 1, 2 do
         
@@ -318,9 +319,20 @@ function MNLBattle:handleJumpAttack(await, resume, party, enemy)
             z = ((enemy.collider.thickness*2)+enemy.z),
         }, "in-quad"))
         if (RUNTIME - self.last_button_pressed[party] ) < 0.3 then
-            enemy:explode(nil, nil, true)
+            if i == 1 then
+                self:showRating(enemy, "good")
+                attack_constant = 1.5
+            elseif (RUNTIME - self.last_button_pressed[party] ) < 0.1 then
+                attack_constant = 2
+                self:showRating(enemy, "excellent")
+            else
+                attack_constant = 1.8
+                self:showRating(enemy, "great")
+            end
+            enemy:flash().siner = 1
+            await(self.timer:after(.2))
         else
-
+            enemy:flash()
             break
         end
     end
@@ -335,8 +347,25 @@ function MNLBattle:handleJumpAttack(await, resume, party, enemy)
         z = 0,
     }, "in-quad"))
     self.timer:cancel(htween)
-    await(self.timer:after(0))
+    local damage = MNL:getAttackDamage(party, enemy, attack_constant)
+    local dmg_number = enemy:hurt(damage)
+    self.timer:afterCond(function ()
+        return dmg_number:isRemoved()
+    end, resume)
+    await()
+    await(self.timer:after(.25))
     self:startNextTurn()
+end
+
+---@ratin
+function MNLBattle:showRating(battler, rating)
+    Assets.playSound("bell")
+    local x,y = battler:getRelativePos(battler.width/2,battler.height)
+    local sprite = Sprite("ui/timing/"..rating, x,y+20)
+    sprite:setOrigin(.5)
+    sprite:setScale(2)
+    self:addChild(sprite)
+    sprite:fadeOutAndRemove(1)
 end
 
 return MNLBattle

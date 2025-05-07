@@ -30,6 +30,22 @@ function MNLEnemyBattler:getAttackerPosition()
     return self.x-100, self.y
 end
 
+--- An override of [`Battler:statusMessage()`](lua://Battler.statusMessage) that positions the message for this EnemyBattler
+---@param type?     string  The type of message to display:
+---|"mercy"     # Indicates that the message will be a mercy number
+---|"damage"    # Indicates that the message will be a damage number
+---|"msg"       # Indicates that the message will use a unique sprite, such as MISS or DOWN text
+---@param arg?      any     An additional argument which depends on what `type` is set to:
+---|"mercy"     # The amount of mercy added
+---|"damage"    # The amount of damage dealt
+---|"msg"       # The path to the sprite, relative to `ui/battle/message`, to use
+---@param color?    table   The color used to draw the status message, defaulting to white
+---@param kill?     boolean Whether this status should cause all other statuses to disappear.
+---@return DamageNumber
+function MNLEnemyBattler:statusMessage(type, arg, color, kill)
+    return super.statusMessage(self, self.width/2, self.height/2, type, arg, color, kill)
+end
+
 ---@param damage number
 ---@param battler MNLPartyBattler
 function MNLEnemyBattler:getAttackDamage(damage, battler)
@@ -83,6 +99,14 @@ function MNLEnemyBattler:getNextWaves()
         return {wave}
     end
     return self.waves
+end
+
+function MNLEnemyBattler:hurt(amount)
+    -- Placeholder
+    local info = debug.getinfo(2)
+    print("Hurting" .. self.id .. " for "..amount .. " hp @ " .. info.source..":"..info.currentline)
+    -- Will return a MNLDamageNumber once that exists
+    return Object()
 end
 
 return MNLEnemyBattler
