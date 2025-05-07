@@ -16,7 +16,7 @@ function Object:preDraw(dont_transform, ...)
         love.graphics.pop()
     end
     if not dont_transform then
-        love.graphics.translate(0, -self.z*2)
+        love.graphics.translate(0, -Utils.round(self.z,.5)*2)
     end
     super.preDraw(self, dont_transform, ...)
     -- super.applyTransformTo(self, transform, ...)
@@ -38,7 +38,7 @@ end
 
 function Object:getCameraOriginExact()
     local x,y = super.getCameraOriginExact(self)
-    y = y - (self.z)
+    y = y - Utils.round(self.z,.5)
     return x,y
 end
 

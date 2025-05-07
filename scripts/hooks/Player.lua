@@ -180,10 +180,13 @@ end
 function Player:moveZ(z, speed)
     z = (z or 0) * (speed or 1)
     local dir = Utils.sign(z)
-    for i=1,z,dir do
-        
+    for i=1,math.ceil(math.abs(z)) do
+        local moved = dir
+        if (i > math.abs(z)) then
+            moved = (math.abs(z) % 1) * dir
+        end
         local prev_z = self.z
-        self.z = self.z + dir
+        self.z = self.z + moved
         local collided, collided_object = self:checkSolidCollision()
         if collided then
             if collided_object and collided_object.onHit then
@@ -193,7 +196,7 @@ function Player:moveZ(z, speed)
                 self:setState("WALK")
             else
                 self.z = prev_z
-                self.z_vel = math.abs(self.z_vel) * -dir
+                self.z_vel = math.abs(self.z_vel) * -moved
             end
             return
         end
