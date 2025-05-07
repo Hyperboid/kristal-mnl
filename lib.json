@@ -12,7 +12,7 @@
             "name": "Swap Actions",
             "id": "actionswap",
             "keys": ["v"],
-            "gamepad": ["gamepad:leftshoulder"]
+            "gamepad": ["gamepad:rightshoulder"]
         }
     ]
 }
