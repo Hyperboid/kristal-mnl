@@ -69,7 +69,7 @@ function MNLBattleActionSelect:update()
     for index, button in ipairs(self.buttons) do
         button:setPosition(self:getButtonPos(index, button))
     end
-    if self.battler.z > 20 then
+    if (math.abs(self.rotation_timer) < 0.01) and self.battler.z > 20 then
         self.battler.z = 20
         self.battler.z_vel = 0
         self.buttons[self.selected_button]:select()
