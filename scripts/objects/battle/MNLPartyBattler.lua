@@ -13,6 +13,9 @@ function MNLPartyBattler:init(chara, x, y)
     self.state_manager = StateManager("STANDING", self, true)
     self.state_manager:addState("AIR", {update = self.updateAir, enter = self.beginAir, leave = self.endAir})
     self.state_manager:addState("STANDING", {update = self.updateStanding, enter = self.beginStanding, leave = self.endStanding})
+    self.state_manager:addState("HURTING", {enter = function (_,prev)
+        return prev
+    end})
     self:setActor(self.actor, true)
     self.sprite:setFacing("right")
     self:setAnimation("battle/idle")
@@ -40,6 +43,9 @@ function MNLPartyBattler:setState(state, ...)
 end
 
 function MNLPartyBattler:update()
+    if self.battle.state == "ENEMYACTION" and self.state ~= "HURTING" then
+        self:checkEnemyCollision()
+    end
     self.state_manager:update()
     super.update(self)
 end
@@ -79,6 +85,38 @@ end
 
 function MNLPartyBattler:getStat(name, default)
     return self.chara:getStat(name, default)
+end
+
+function MNLPartyBattler:checkEnemyCollision()
+    Object.startCache()
+    for _, enemy in ipairs(self.battle.enemies) do
+        if self:collidesWith(enemy) then
+            self:onCollide(enemy)
+        end
+    end
+    Object.endCache()
+end
+
+---@param collided MNLEnemyBattler
+function MNLPartyBattler:onCollide(collided)
+    local enemy = collided.enemy
+    if (not collided:canStomp()) or self.z < collided.z then
+        self:hurt(MNL:getAttackDamage(enemy, self, 2))
+    elseif self.state == "AIR" then
+        self.z_vel = self.jump_velocity
+        enemy:hurt(MNL:getAttackDamage(self, enemy, 0.5))
+    end
+end
+
+
+function MNLPartyBattler:hurt(amount)
+    self:setState("HURTING")
+    Assets.playSound("hurt")
+    -- Placeholder
+    local info = debug.getinfo(2)
+    print("Hurting " .. self.chara.id .. " for "..amount .. " hp @ " .. info.source..":"..info.currentline)
+    -- Will return a MNLDamageNumber once that exists
+    return Object()
 end
 
 return MNLPartyBattler

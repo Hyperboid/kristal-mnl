@@ -16,6 +16,7 @@ function MNLEnemyBattler:init(actor, use_overlay)
     self.max_health = 60
     self.extra_stats = {}
     self.waves = {}
+    self.enemy = self
 end
 
 function MNLEnemyBattler:postInit()
@@ -107,6 +108,10 @@ function MNLEnemyBattler:hurt(amount)
     print("Hurting " .. self.id .. " for "..amount .. " hp @ " .. info.source..":"..info.currentline)
     -- Will return a MNLDamageNumber once that exists
     return Object()
+end
+
+function MNLEnemyBattler:canStomp()
+    return true
 end
 
 return MNLEnemyBattler
