@@ -309,7 +309,7 @@ function MNLBattle:handleJumpAttack(await, resume, party, enemy)
     await(party:walkToSpeed(x, y+1, 10, resume))
     await(party:setAnimation("battle/jump_ready", resume))
     local t = 0.35
-    self.timer:tween(t*1.9, party, {x = enemy.x})
+    self.timer:tween(t*2, party, {x = enemy.x})
     for i = 1, 2 do
         
         await(self.timer:tween(t, party, {
