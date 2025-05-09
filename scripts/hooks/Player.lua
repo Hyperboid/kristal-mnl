@@ -278,7 +278,7 @@ end
 function Player:doAction(action)
     if (action or "none") == "none" then return end
     if action == "jump" then
-        self.jump_buffer = 10
+        self.jump_buffer = 3
     elseif self.is_player and (action == "interact" or action == "talk") then
         self:doInteract()
         return true
