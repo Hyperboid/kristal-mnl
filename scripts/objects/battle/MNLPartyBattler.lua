@@ -62,9 +62,14 @@ end
 
 function MNLPartyBattler:moveZ(z, speed)
     z = (z or 0) * (speed or 1)
-    local sign = Utils.sign(z)
-    for i=1,math.floor(math.abs(z)) do
-        self.z = self.z + sign
+    local dir = Utils.sign(z)
+    for i=1,math.ceil(math.abs(z)) do
+        local moved = dir
+        if (i > math.abs(z)) then
+            moved = (math.abs(z) % 1) * dir
+        end
+        local prev_z = self.z
+        self.z = self.z + moved
         for _, value in ipairs(self.parent.children) do
             
         end
