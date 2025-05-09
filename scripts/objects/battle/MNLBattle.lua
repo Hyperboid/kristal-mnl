@@ -329,7 +329,7 @@ function MNLBattle:handleJumpAttack(await, resume, party, enemy)
                 attack_constant = 1.8
                 self:showRating(enemy, "great")
             end
-            enemy:flash().siner = 1
+            enemy:flash()
             await(self.timer:after(.2))
         else
             enemy:flash()

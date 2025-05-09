@@ -42,4 +42,10 @@ function MNLBattler:drawShadow()
     love.graphics.ellipse("fill", (self.width/2), self.height + 0 * -2, 8,4)
 end
 
+function MNLBattler:flash(...)
+    local fade = super.flash(self, ...)
+    fade.siner = 4
+    return fade
+end
+
 return MNLBattler
