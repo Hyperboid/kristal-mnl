@@ -359,7 +359,14 @@ end
 
 ---@ratin
 function MNLBattle:showRating(battler, rating)
-    Assets.playSound("bell")
+    if not Assets.playSound("rating_"..rating) then
+        Assets.playSound("bell", 1, ({
+            ok = 0.5,
+            good = 0.6,
+            great = 0.7,
+            excellent = .8,
+        })[rating] or 0.4)
+    end
     local x,y = battler:getRelativePos(battler.width/2,battler.height)
     local sprite = Sprite("ui/timing/"..rating, x,y+20)
     sprite:setOrigin(.5)
