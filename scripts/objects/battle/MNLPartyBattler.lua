@@ -13,9 +13,7 @@ function MNLPartyBattler:init(chara, x, y)
     self.state_manager = StateManager("STANDING", self, true)
     self.state_manager:addState("AIR", {update = self.updateAir, enter = self.beginAir, leave = self.endAir})
     self.state_manager:addState("STANDING", {update = self.updateStanding, enter = self.beginStanding, leave = self.endStanding})
-    self.state_manager:addState("HURTING", {enter = function (_,prev)
-        return prev
-    end})
+    self.state_manager:addState("HURTING", {enter = self.beginHurting, update = self.updateHurting, leave = self.endHurting})
     self:setActor(self.actor, true)
     self.sprite:setFacing("right")
     self:setAnimation("battle/idle")
@@ -88,6 +86,30 @@ function MNLPartyBattler:updateAir()
     end
 end
 
+function MNLPartyBattler:updateHurting()
+    self:moveZ((self.z_vel * (DT*.5)))
+    if not NOCLIP then
+        self.z_vel = math.max(-300, self.z_vel - (self.gravity*DT))
+    end
+    if self.z <= 0 then
+        self.z = 0
+        self.z_vel = 0
+        self:setState(self.hurt_prev)
+    end
+end
+
+function MNLPartyBattler:beginHurting(prev)
+    self.hurt_prev = prev
+    self.z_vel = 300
+    self.z = self.z + 3
+    self.sprite:setSprite("walk/down")
+    self:setAnimation("battle/hurt")
+end
+
+function MNLPartyBattler:endHurting()
+    self.sprite:resetSprite()
+end
+
 function MNLPartyBattler:getStat(name, default)
     return self.chara:getStat(name, default)
 end
@@ -116,8 +138,8 @@ end
 
 function MNLPartyBattler:hurt(amount)
     self:setState("HURTING")
-    Assets.playSound("hurt")
     -- Placeholder
+    Assets.playSound("hurt")
     local info = debug.getinfo(2)
     print("Hurting " .. self.chara.id .. " for "..amount .. " hp @ " .. info.source..":"..info.currentline)
     -- Will return a MNLDamageNumber once that exists
