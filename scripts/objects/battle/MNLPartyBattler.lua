@@ -131,7 +131,7 @@ function MNLPartyBattler:onCollide(collided)
         self:hurt(MNL:getAttackDamage(enemy, self, 2))
     elseif self.state == "AIR" then
         self.z_vel = self.jump_velocity
-        enemy:hurt(MNL:getAttackDamage(self, enemy, 0.5))
+        collided:onCounterAttack(self)
     end
 end
 

@@ -74,4 +74,8 @@ function MNLWave:run(await, resume)
     self:finish()
 end
 
+-- *Override* Called when the attacker is directly counter-attacked.
+---@param battler MNLPartyBattler
+function MNLWave:onCounterAttack(battler) end
+
 return MNLWave

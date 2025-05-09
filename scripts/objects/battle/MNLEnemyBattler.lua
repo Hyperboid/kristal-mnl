@@ -114,4 +114,12 @@ function MNLEnemyBattler:canStomp()
     return true
 end
 
+---@param battler MNLPartyBattler
+function MNLEnemyBattler:onCounterAttack(battler)
+    self:hurt(MNL:getAttackDamage(battler, self, 0.5))
+    if self.wave then
+        self.wave:onCounterAttack(battler)
+    end
+end
+
 return MNLEnemyBattler
