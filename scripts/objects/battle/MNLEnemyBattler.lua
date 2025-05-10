@@ -116,10 +116,10 @@ end
 
 ---@param battler MNLPartyBattler
 function MNLEnemyBattler:onCounterAttack(battler)
-    self:hurt(MNL:getAttackDamage(battler, self, 0.5))
-    if self.wave then
-        self.wave:onCounterAttack(battler)
+    if self.wave and self.wave:onCounterAttack(battler) then
+        return
     end
+    self:hurt(MNL:getAttackDamage(battler, self, 0.5))
 end
 
 return MNLEnemyBattler
