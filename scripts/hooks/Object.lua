@@ -88,4 +88,9 @@ function Object:explode(x, y, dont_remove, options)
     return explosion
 end
 
+function Object:fullUpdate()
+    self.last_z = self.z
+    super.fullUpdate(self)
+end
+
 return Object

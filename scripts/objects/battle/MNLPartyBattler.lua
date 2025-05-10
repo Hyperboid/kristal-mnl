@@ -127,7 +127,7 @@ end
 ---@param collided MNLEnemyBattler
 function MNLPartyBattler:onCollide(collided)
     local enemy = collided.enemy
-    if (not collided:canStomp()) or self.z < collided.z then
+    if (not collided:canStomp()) or self.last_z < collided.collider:getZ() then
         self:hurt(MNL:getAttackDamage(enemy, self, 2))
     elseif self.state == "AIR" then
         self.z_vel = self.jump_velocity
