@@ -120,6 +120,7 @@ function MNLEnemyBattler:onCounterAttack(battler)
         return
     end
     self:hurt(MNL:getAttackDamage(battler, self, 0.5))
+    Assets.playSound("damage") -- Placeholder
 end
 
 return MNLEnemyBattler
