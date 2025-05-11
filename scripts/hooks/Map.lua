@@ -11,8 +11,10 @@ end
 
 function Map:loadHitboxes(layer)
     local hitboxes = super.loadHitboxes(self, layer)
-    for _, collider in ipairs(hitboxes) do
-        collider.thickness = math.huge
+    if not self.side then
+        for _, collider in ipairs(hitboxes) do
+            collider.thickness = math.huge
+        end
     end
     local floor = Hitbox(self.world, 0,0,1000,1000)
     floor.z = -5

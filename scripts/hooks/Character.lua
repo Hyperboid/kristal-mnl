@@ -16,7 +16,13 @@ end
 
 function Character:setActor(actor)
     super.setActor(self,actor)
-    self.collider.thickness = self.actor.hitbox_thickness or 1
+    if (self.world or Game.world).map.side then
+        self.collider.y = self.collider.y - ((self.actor.hitbox_thickness or 0)*2)
+        self.collider.y = self.collider.y - .5
+        self.collider.height = self.collider.height + ((self.actor.hitbox_thickness or 0)*2)
+    else
+        self.collider.thickness = self.actor.hitbox_thickness or 1
+    end
 end
 
 

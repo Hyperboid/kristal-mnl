@@ -38,6 +38,9 @@ function lib:init()
         end)
         if Kristal.getLibConfig("mnl", "draw_extruded_colliders") then
             Utils.hook(class, "draw", function (orig, self, r,g,b,a)
+                if self.thickness <= 1 then
+                    return orig(self,r,g,b,a)
+                end
                 if type(r) == "table" then r,g,b,a = Utils.unpackColor(r) end
                 love.graphics.push()
                 love.graphics.translate(0, -self.z)

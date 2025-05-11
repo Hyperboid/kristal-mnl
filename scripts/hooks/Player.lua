@@ -89,16 +89,21 @@ function Player:updateHistory()
     self.last_move_y = self.y
 end
 
-function Player:isOnFloor()
+function Player:isOnFloor(margin)
+    margin = margin or 4
     if self.world.map.side then
-        self.y = self.y + 4
+        if self:checkSolidCollision() then return false end
+        self.y = self.y + margin
         local collided, collided_object = self:checkSolidCollision()
-        self.y = self.y - 4
+        self.y = self.y - margin
         return collided, collided_object
     else
-        self.z = self.z - 4
+        if self.world.map.floor and self.world.map.floor > self.z then
+            return true
+        end
+        self.z = self.z - margin
         local collided, collided_object = self:checkSolidCollision()
-        self.z = self.z + 4
+        self.z = self.z + margin
         return collided, collided_object
     end
 end
