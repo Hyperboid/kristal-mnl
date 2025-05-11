@@ -44,6 +44,7 @@ end
 ---@param kill?     boolean Whether this status should cause all other statuses to disappear.
 ---@return DamageNumber
 function MNLEnemyBattler:statusMessage(type, arg, color, kill)
+    self.hit_count = 0
     return super.statusMessage(self, self.width/2, self.height/2, type, arg, color, kill)
 end
 
@@ -107,7 +108,8 @@ function MNLEnemyBattler:hurt(amount, battler, on_defeat)
     local info = debug.getinfo(2)
     print("Hurting " .. self.id .. " for "..amount .. " hp @ " .. info.source..":"..info.currentline)
 
-    local damage_number = Object()
+    -- TODO: Make a dedicated object type for M&L-styled damage numbers
+    local damage_number = self:statusMessage("damage", amount)
     self.health = self.health - amount
     self:checkHealth(on_defeat, amount, battler)
 

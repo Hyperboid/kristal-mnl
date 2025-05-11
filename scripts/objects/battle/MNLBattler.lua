@@ -26,6 +26,7 @@ end
 function MNLBattler:setActor(actor, use_overlay)
     super.setActor(self, actor, use_overlay)
     self:setHitbox(self.actor:getHitbox())
+    self.sprite.inherit_color = true
     self.collider.thickness = self.actor.hitbox_thickness or self.collider.thickness
 end
 
