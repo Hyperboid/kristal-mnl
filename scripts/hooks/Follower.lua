@@ -122,11 +122,8 @@ function Follower:update()
     super.update(self)
     if self.state_manager.state == "WALK" then
 
-        local ground_level = self:getGroundLevel()
-        if self.z > ground_level then
+        if not self:isOnFloor() then
             self.state_manager:setState("AIR")
-        elseif self.z < ground_level then
-            self.z = ground_level
         elseif self.world.player:isMovementEnabled() then
         end
     end
