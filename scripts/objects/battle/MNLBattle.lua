@@ -17,6 +17,7 @@ function MNLBattle:init()
     self.state_manager:addState("ACTIONS", {enter = self.beginActions})
     self.state_manager:addState("ACTIONSELECT", self.action_select)
     self.state_manager:addState("ENEMYSELECT", self.enemy_select)
+    self.state_manager:addState("VICTORY", {enter = self.returnToWorld})
     self.music = Music()
     self.timer = self:addChild(Timer())
     self.last_button_pressed = {}
@@ -257,7 +258,11 @@ function MNLBattle:beforeTurnStart()
 end
 
 function MNLBattle:finishDefeat()
-    self:startNextTurn()
+    if (#self.enemies - #self.enemies_to_remove) == 0 then
+        self:setState("VICTORY")
+    else
+        self:startNextTurn()
+    end
 end
 
 function MNLBattle:returnToWorld()
