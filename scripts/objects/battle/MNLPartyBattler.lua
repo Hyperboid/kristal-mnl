@@ -89,7 +89,7 @@ end
 function MNLPartyBattler:updateHurting()
     self:moveZ((self.z_vel * (DT*.5)))
     if not NOCLIP then
-        self.z_vel = math.max(-300, self.z_vel - (self.gravity*DT))
+        self.z_vel = math.max(-300, self.z_vel - (self.gravity*DT*.75))
     end
     if self.z <= 0 then
         self.z = 0
