@@ -53,18 +53,20 @@ function Player:update()
     end
 end
 
+function Player:isOnFloor()
+    self.z = self.z - 4
+    local collided, collided_object = self:checkSolidCollision()
+    self.z = self.z + 4
+    return collided, collided_object
+end
+
 function Player:updateWalk()
     super.updateWalk(self)
-    local ground_level = self:getGroundLevel()
-    if self.z > ground_level then
-        if (self.z - ground_level) > 3 then
-            self.coyote_time = (3/30)
-            self.state_manager:setState("AIR")
-        else
-            self.z = ground_level
-        end
-    elseif self.z < ground_level then
-        self.z = ground_level
+    local collided = self:moveZ(-4)
+    self:moveZ(4)
+    if not self:isOnFloor() then
+        self.coyote_time = (3/30)
+        self.state_manager:setState("AIR")
     end
     if self.jump_buffer > 0 then
         self.jump_buffer = 0
@@ -192,20 +194,21 @@ function Player:moveZ(z, speed)
             if collided_object and collided_object.onHit then
                 collided_object:onHit(self, "jump")
             end
-            if self:getGroundLevel() >= self.z then
+            if moved < 0 then
                 self:setState("WALK")
             else
                 self.z = prev_z
                 self.z_vel = math.abs(self.z_vel) * -moved
             end
-            return
+            return collided, collided_object
         end
     end
 end
 
 function Player:updateAir()
+    local collided = false
     if self:isMovementEnabled() then
-        self:moveZ(self.z_vel * DT)
+        collided = self:moveZ(self.z_vel * DT)
         if not NOCLIP then
         self.z_vel = math.max(-300, self.z_vel - (self.gravity*DT))
         end
@@ -213,10 +216,11 @@ function Player:updateAir()
         self:move(x,y, DTMULT * self.walk_speed)
     end
     local ground_level, ground_obj = self:getGroundLevel()
-    if self.z < ground_level and self.z_vel <= 0 then
+    local is_on_floor, floor_obj = self:isOnFloor()
+    if is_on_floor and self.z_vel <= 0 then
         self:setState("WALK")
-        self.z_vel = 0
-        self.z = ground_level
+        self.z_vel = 1
+        self.z = floor_obj and (floor_obj.target_z or (floor_obj.collider and floor_obj.collider:getZ() or floor_obj.z)) or 0
         if ground_obj and ground_obj.onHit then
             ground_obj:onHit(self, "jump")
         end

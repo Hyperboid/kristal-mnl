@@ -82,6 +82,9 @@ function Character:doMoveAmount(type, amount, other_amount)
 end
 
 function Character:checkSolidCollision()
+    if (self.world.map.data.properties.floor or -math.huge) > self.collider:getZ() then
+        return true
+    end
     return self.world:checkCollision(self.collider, self.enemy_collision)
 end
 

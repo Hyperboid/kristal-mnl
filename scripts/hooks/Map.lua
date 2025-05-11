@@ -6,6 +6,9 @@ function Map:loadHitboxes(layer)
     for _, collider in ipairs(hitboxes) do
         collider.thickness = math.huge
     end
+    local floor = Hitbox(self.world, 0,0,1000,1000)
+    floor.z = -5
+    table.insert(hitboxes, floor)
     return hitboxes
 end
 

@@ -15,7 +15,7 @@ function event:init(data)
     self.ground_collider = Hitbox(self, 1,h+11,self.width-2,h-1)
     self.ground_collider.thickness = 30
     self:setHitbox(1,h+11,self.width-2,h-1)
-    self.collider.thickness = 10
+    self.collider.thickness = 15
     self.collider.z = -20
     self:setOrigin(0,1)
 end
@@ -27,6 +27,7 @@ function event:postLoad()
     self.z = self.z + 10
     self.y = self.y + 20
     self.init_z = self.z
+    self.target_z = self.z + 10
 end
 
 function event:onHit(object, hit_type)
@@ -79,13 +80,6 @@ end
 
 function event:getSortPosition()
     return self.x, self.y-8
-end
-
-function event:getHeightFor(object)
-    if object.z < (self.z-20) then
-        return -math.huge
-    end
-    return (self.z + 10)
 end
 
 return event
