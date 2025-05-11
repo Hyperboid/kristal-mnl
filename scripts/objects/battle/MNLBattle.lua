@@ -8,6 +8,8 @@ function MNLBattle:init()
     self.party = {}
     ---@type MNLEnemyBattler[]
     self.enemies = {}
+    self.enemies_to_remove = {}
+    self.defeated_enemies = {}
     self.action_select = MNLBattleActionSelect(self)
     self.enemy_select = MNLBattleEnemySelect(self)
     self.state_manager = StateManager("", self, true)
@@ -148,6 +150,11 @@ function MNLBattle:onStateChange(old, new)
 end
 
 function MNLBattle:update()
+    for _,enemy in ipairs(self.enemies_to_remove) do
+        Utils.removeFromTable(self.enemies, enemy)
+    end
+    self.enemies_to_remove = {}
+
     self.state_manager:update()
     self.update_child_list = true
     super.update(self)
@@ -225,6 +232,7 @@ function MNLBattle:startNextTurn()
             self.current_battler:setState("STANDING")
         end
     end
+    if self:beforeTurnStart() then return end
     local prev_battler = self.current_battler
     self.current_battler = self:getNextBattler()
 
@@ -236,6 +244,20 @@ function MNLBattle:startNextTurn()
     else
         self:setState("ACTIONSELECT", nil, self.current_battler)
     end
+end
+
+function MNLBattle:beforeTurnStart()
+    for _, enemy in ipairs(self.enemies) do
+        if enemy.queued_defeat then
+            enemy:queued_defeat()
+            self:setState("ENEMYDEFEAT")
+            return true
+        end
+    end
+end
+
+function MNLBattle:finishDefeat()
+    self:startNextTurn()
 end
 
 function MNLBattle:returnToWorld()
@@ -373,6 +395,13 @@ function MNLBattle:showRating(battler, rating)
     sprite:setScale(2)
     self:addChild(sprite)
     sprite:fadeOutAndRemove(1)
+end
+
+function MNLBattle:removeEnemy(enemy, defeated)
+    table.insert(self.enemies_to_remove, enemy)
+    if defeated then
+        table.insert(self.defeated_enemies, enemy)
+    end
 end
 
 return MNLBattle

@@ -102,12 +102,69 @@ function MNLEnemyBattler:getNextWaves()
     return self.waves
 end
 
-function MNLEnemyBattler:hurt(amount)
+function MNLEnemyBattler:hurt(amount, battler, on_defeat)
     -- Placeholder
     local info = debug.getinfo(2)
     print("Hurting " .. self.id .. " for "..amount .. " hp @ " .. info.source..":"..info.currentline)
-    -- Will return a MNLDamageNumber once that exists
-    return Object()
+
+    local damage_number = Object()
+    self.health = self.health - amount
+    self:checkHealth(on_defeat, amount, battler)
+
+    return damage_number
+end
+
+function MNLEnemyBattler:checkHealth(on_defeat, amount, battler)
+    -- on_defeat is optional
+    if self.health <= 0 then
+        self.health = 0
+        if not self.defeated then
+            if on_defeat then
+                self.queued_defeat = function() return on_defeat(self,amount,battler) end
+            else
+                self.queued_defeat = function() return self:forceDefeat(amount,battler) end
+            end
+        end
+    end
+end
+
+--- Immediately defeats an enemy
+---@param amount?   number          The amount of damage taken by the last hit
+---@param battler?  MNLPartyBattler The party member that dealt the last hit
+function MNLEnemyBattler:forceDefeat(amount, battler)
+    self:onDefeat(amount, battler)
+end
+
+function MNLEnemyBattler:onDefeat(damage, battler)
+    if self.boss then
+        self:onDefeatExplode(damage, battler)
+    else
+        self:onDefeatFade(damage, battler)
+    end
+end
+
+function MNLEnemyBattler:onDefeatFade(damage, battler)
+    self:defeat()
+    self:flash()
+    self:fadeTo(0, 1, function ()
+        self:remove()
+        self.battle:finishDefeat(self)
+    end)
+end
+
+function MNLEnemyBattler:onDefeatExplode(damage, battler)
+    self:defeat()
+    local explosion = self:explode()
+    explosion.remove = Utils.override(explosion.remove, function (orig, expl)
+        orig(expl)
+        self.battle:finishDefeat(self)
+    end)
+end
+
+function MNLEnemyBattler:defeat(reason)
+    self.done_state = reason or "DEFEATED"
+
+    Game.battle:removeEnemy(self, true)
 end
 
 function MNLEnemyBattler:canStomp()
