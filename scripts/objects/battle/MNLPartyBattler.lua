@@ -18,6 +18,7 @@ function MNLPartyBattler:init(chara, x, y)
     self.sprite:setFacing("right")
     self:setAnimation("battle/idle")
     self.gravity, self.jump_velocity = MNL:getJumpPhysics((2.5)*20, .2)
+    self.inv_timer = 0
 end
 
 function MNLPartyBattler:onButtonPressed()
@@ -41,7 +42,8 @@ function MNLPartyBattler:setState(state, ...)
 end
 
 function MNLPartyBattler:update()
-    if self.battle.state == "ENEMYACTION" and self.state ~= "HURTING" then
+    self.inv_timer = self.inv_timer - DT
+    if self.battle.state == "ENEMYACTION" and self.state ~= "HURTING" and self.inv_timer <= 0 then
         self:checkEnemyCollision()
     end
     self.state_manager:update()
@@ -108,6 +110,7 @@ end
 
 function MNLPartyBattler:endHurting()
     self.sprite:resetSprite()
+    self.inv_timer = 0.2
 end
 
 function MNLPartyBattler:getStat(name, default)
