@@ -1,6 +1,14 @@
 ---@class Map : Map
 local Map, super = Class("Map")
 
+
+function Map:init(world, data)
+    super.init(self,world,data)
+
+    self.side = data and data.properties and data.properties["side"] or false
+    self.floor = data and data.properties and data.properties["floor"]
+end
+
 function Map:loadHitboxes(layer)
     local hitboxes = super.loadHitboxes(self, layer)
     for _, collider in ipairs(hitboxes) do

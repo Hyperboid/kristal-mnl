@@ -17,7 +17,7 @@ A library that turns your beloved Deltarune engine into Mario & Luigi.
 - [ ] Overworld
   - [ ] Action Switching
   - [ ] Hammer
-  - [ ] 2D Maps
+  - [x] 2D Maps
   - [ ] Proper layering (not ugly mask hack)
 - [ ] Battle
   - [ ] Collision between battlers

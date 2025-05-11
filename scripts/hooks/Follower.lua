@@ -103,6 +103,9 @@ function Follower:getTargetPosition()
             break
         end
     end
+    if self.world.map.side then
+        ty = self.y
+    end
     return tx, ty, facing, state, args
 end
 

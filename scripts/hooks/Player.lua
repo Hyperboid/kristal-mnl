@@ -16,6 +16,10 @@ end
 
 
 function Player:update()
+    if self.world.map.side then
+        self.z = 0
+        self.draw_shadow = false
+    end
     if self.oor_pos then
         local oor_pos = self.oor_pos
         self.oor_pos = nil
@@ -51,19 +55,56 @@ function Player:update()
         self:updateHistory()
         DT, DTMULT = o_dt, o_dtmult
     end
+    if self.world.map.side then
+        self.z = 0
+    end
+end
+
+
+function Player:updateHistory()
+    if #self.history == 0 then
+        table.insert(self.history, { x = self.x, y = self.y, time = 0 })
+    end
+
+    local moved = self.x ~= self.last_move_x or (not self.world.map.side and self.y ~= self.last_move_y)
+
+    local auto = self.auto_moving
+
+    if moved then
+        self.history_time = self.history_time + DT
+
+        table.insert(self.history, 1,
+            { x = self.x, y = self.y, facing = self.facing, time = self.history_time, state = self.state_manager.state,
+                state_args = self.state_manager.args, auto = auto })
+        while (self.history_time - self.history[#self.history].time) > (Game.max_followers * FOLLOW_DELAY) do
+            table.remove(self.history, #self.history)
+        end
+    end
+
+    for _, follower in ipairs(self.world.followers) do
+        follower:updateHistory(moved, auto)
+    end
+
+    self.last_move_x = self.x
+    self.last_move_y = self.y
 end
 
 function Player:isOnFloor()
-    self.z = self.z - 4
-    local collided, collided_object = self:checkSolidCollision()
-    self.z = self.z + 4
-    return collided, collided_object
+    if self.world.map.side then
+        self.y = self.y + 4
+        local collided, collided_object = self:checkSolidCollision()
+        self.y = self.y - 4
+        return collided, collided_object
+    else
+        self.z = self.z - 4
+        local collided, collided_object = self:checkSolidCollision()
+        self.z = self.z + 4
+        return collided, collided_object
+    end
 end
 
 function Player:updateWalk()
     super.updateWalk(self)
-    local collided = self:moveZ(-4)
-    self:moveZ(4)
     if not self:isOnFloor() then
         self.coyote_time = (3/30)
         self.state_manager:setState("AIR")
@@ -82,10 +123,12 @@ function Player:getDesiredMovement(speed)
     elseif Input.down("right") then
         x = 1
     end
-    if Input.down("up") then
-        y = -1
-    elseif Input.down("down") then
-        y = 1
+    if not self.world.map.side then
+        if Input.down("up") then
+            y = -1
+        elseif Input.down("down") then
+            y = 1
+        end
     end
     return x, y
 end
@@ -96,7 +139,7 @@ function Player:isOutOfRange()
     local follower = self.is_player and self.world.followers[1]
     if follower then
         local dist = ((self.walk_speed * 15) * FOLLOW_DELAY) + self.walk_speed
-        if Utils.dist(0,self.y,0,follower.y) > dist then
+        if (not self.world.map.side) and (Utils.dist(0,self.y,0,follower.y) > dist) then
             return true
         end
         if Utils.dist(self.x,0,follower.x,0) > dist then
@@ -180,6 +223,36 @@ function Player:endAir()
 end
 
 function Player:moveZ(z, speed)
+    if self.world.map.side then
+        z = (z or 0) * -(speed or 1)
+        local dir = Utils.sign(z)
+        for i=1,math.ceil(math.abs(z)) do
+            local moved = dir
+            if (i > math.abs(z)) then
+                moved = (math.abs(z) % 1) * dir
+            end
+            local prev_z = self.y
+            self.y = self.y + (moved*2)
+            local collided, collided_object = self:checkSolidCollision()
+            if collided then
+                if collided_object and collided_object.onHit then
+                    collided_object:onHit(self, "jump")
+                end
+                if moved < 0 then
+                    self:setState("WALK")
+                else
+                    self.y = prev_z
+                    self.z_vel = math.abs(self.z_vel) * -moved
+                end
+                return collided, collided_object
+            end
+        end
+    else
+        return self:fullMoveZ(z,speed)
+    end
+end
+
+function Player:fullMoveZ(z, speed)
     z = (z or 0) * (speed or 1)
     local dir = Utils.sign(z)
     for i=1,math.ceil(math.abs(z)) do
@@ -220,7 +293,18 @@ function Player:updateAir()
     if is_on_floor and self.z_vel <= 0 then
         self:setState("WALK")
         self.z_vel = 1
-        self.z = floor_obj and (floor_obj.target_z or (floor_obj.collider and floor_obj.collider:getZ() or floor_obj.z)) or 0
+        if self.world.map.side then
+            self.y = self.y - 8
+            for i = 1, 16 do
+                self.y = math.floor(self.y+1)
+                if self:checkSolidCollision() then
+                    self.y = self.y - 1
+                    break
+                end
+            end
+        else
+            self.z = floor_obj and (floor_obj.target_z or (floor_obj.collider and floor_obj.collider:getZ() or floor_obj.z)) or 0
+        end
         if ground_obj and ground_obj.onHit then
             ground_obj:onHit(self, "jump")
         end
