@@ -66,7 +66,7 @@ function Player:updateHistory()
         table.insert(self.history, { x = self.x, y = self.y, time = 0 })
     end
 
-    local moved = self.x ~= self.last_move_x or (not self.world.map.side and self.y ~= self.last_move_y)
+    local moved = self.x ~= self.last_move_x or ((not self.world.map.side or NOCLIP) and self.y ~= self.last_move_y)
 
     local auto = self.auto_moving
 
@@ -128,7 +128,7 @@ function Player:getDesiredMovement(speed)
     elseif Input.down("right") then
         x = 1
     end
-    if not self.world.map.side then
+    if (not self.world.map.side) or NOCLIP then
         if Input.down("up") then
             y = -1
         elseif Input.down("down") then
@@ -229,6 +229,7 @@ end
 
 function Player:moveZ(z, speed)
     if self.world.map.side then
+        if NOCLIP then return end
         z = (z or 0) * -(speed or 1)
         local dir = Utils.sign(z)
         for i=1,math.ceil(math.abs(z)) do

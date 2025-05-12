@@ -103,7 +103,7 @@ function Follower:getTargetPosition()
             break
         end
     end
-    if self.world.map.side then
+    if self.world.map.side and not NOCLIP then
         ty = self.y
     end
     return tx, ty, facing, state, args
