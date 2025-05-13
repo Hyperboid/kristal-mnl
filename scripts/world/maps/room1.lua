@@ -498,14 +498,15 @@ return {
           type = "",
           shape = "rectangle",
           x = 80,
-          y = 210,
+          y = 40,
           width = 40,
           height = 40,
           rotation = 0,
           visible = true,
           properties = {
             ["text1"] = "* Silence echoes in the darkness\nof this familiar-yet-different\nscenery.",
-            ["text2"] = "* The power of avoiding copying\nofficial music shines within\nyou."
+            ["text2"] = "* The power of avoiding copying\nofficial music shines within\nyou.",
+            ["z"] = 60
           }
         },
         {
