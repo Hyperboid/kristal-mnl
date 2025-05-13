@@ -16,7 +16,7 @@ function Map:loadHitboxes(layer)
             collider.thickness = math.huge
         end
     end
-    local floor = Hitbox(self.world, 0,0,1000,1000)
+    local floor = Hitbox(self.world, 0,0,self.width * self.tile_width,self.height * self.tile_height)
     floor.z = -5
     table.insert(hitboxes, floor)
     return hitboxes
