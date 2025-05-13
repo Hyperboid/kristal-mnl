@@ -20,8 +20,8 @@ function MNLBattleVictory:onEnter()
 end
 
 function MNLBattleVictory:update()
-    self.timer = self.timer + 1
-    if self.timer >= 3 then
+    self.timer = self.timer + DTMULT
+    if self.timer >= 20 then
         self.timer = -math.huge
         self.battle:returnToWorld()
     end
