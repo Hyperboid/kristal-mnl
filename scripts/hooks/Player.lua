@@ -90,7 +90,7 @@ function Player:updateHistory()
 end
 
 function Player:isOnFloor(margin)
-    margin = margin or 4
+    margin = margin or 8
     if self.world.map.side then
         if self:checkSolidCollision() then return false end
         self.y = self.y + margin
@@ -113,6 +113,8 @@ function Player:updateWalk()
     if not self:isOnFloor() then
         self.coyote_time = (3/30)
         self.state_manager:setState("AIR")
+    elseif not self:isOnFloor(1) then
+        self:moveZ(-4)
     end
     if self.jump_buffer > 0 then
         self.jump_buffer = 0
