@@ -4,7 +4,7 @@ function Mod:init()
 end
 
 function Mod:postInit()
-    -- Game.world.camera.keep_in_bounds = false
+    Game.world.camera.keep_in_bounds = false
 end
 
 function Mod:postLoad()
