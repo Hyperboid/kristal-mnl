@@ -299,7 +299,7 @@ function Player:updateAir()
     if self:isMovementEnabled() then
         collided = self:moveZ(self.z_vel * DT)
         if not NOCLIP then
-        self.z_vel = math.max(-300, self.z_vel - (self.gravity*DT))
+        self.z_vel = math.max(-400, self.z_vel - (self.gravity*DT))
         end
         local x, y = self:getDesiredMovement(self.walk_speed)
         self:move(x,y, DTMULT * self.walk_speed)
