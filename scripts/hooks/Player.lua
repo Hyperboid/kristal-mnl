@@ -48,7 +48,7 @@ function Player:update()
     -- while the follower jumps out of it. However, this has the side effect
     -- of preventing you from sliding on this invisible wall.
     if self:isOutOfRange() then
-        self.oor_pos = {self.last_x, self.last_y}
+        self.oor_pos = {self.last_x, self.world.map.side and self.y or self.last_y}
         self:setPosition(unpack(self.oor_pos))
         local o_dt, o_dtmult = DT, DTMULT
         DT, DTMULT = 0, 0
@@ -231,8 +231,8 @@ function Player:endAir()
 end
 
 function Player:moveZ(z, speed)
-    local was_collided =  self:checkSolidCollision()
     if self.world.map.side then
+        local was_collided =  self:checkSolidCollision()
         if NOCLIP then return end
         z = (z or 0) * -(speed or 1)
         local dir = Utils.sign(z)
@@ -244,7 +244,7 @@ function Player:moveZ(z, speed)
             local prev_z = self.y
             self.y = self.y + (moved*2)
             local collided, collided_object = self:checkSolidCollision()
-            if collided then
+            if collided and not was_collided then
                 if collided_object and collided_object.onHit then
                     collided_object:onHit(self, "jump")
                 end
@@ -267,6 +267,7 @@ function Player:moveZ(z, speed)
 end
 
 function Player:fullMoveZ(z, speed)
+    local was_collided =  self:checkSolidCollision()
     z = (z or 0) * (speed or 1)
     local dir = Utils.sign(z)
     for i=1,math.ceil(math.abs(z)) do
@@ -277,7 +278,7 @@ function Player:fullMoveZ(z, speed)
         local prev_z = self.z
         self.z = self.z + moved
         local collided, collided_object = self:checkSolidCollision()
-        if collided then
+        if collided and not was_collided then
             if collided_object and collided_object.onHit then
                 collided_object:onHit(self, "jump")
             end
@@ -293,7 +294,7 @@ function Player:fullMoveZ(z, speed)
 end
 
 function Player:updateAir()
-    local should_walk = not self.world.map.side or not self:checkSolidCollision()
+    local should_walk = (not self.world.map.side or not self:checkSolidCollision()) and self.z_vel > 0
     local collided = false
     if self:isMovementEnabled() then
         collided = self:moveZ(self.z_vel * DT)
@@ -389,5 +390,9 @@ function Player:doAction(action)
         return true
     end
 end
+
+-- function Player:onStateChange(old,new)
+--     print(debug.traceback(string.format("Changed state from %q to %q.", old, new)))
+-- end
 
 return Player
