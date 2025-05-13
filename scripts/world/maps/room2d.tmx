@@ -148,7 +148,6 @@ no-good wall slammers.</property>
    <point/>
   </object>
   <object id="43" name="qblock" x="440" y="160" width="40" height="40"/>
-  <object id="44" x="592" y="-95" height="2"/>
   <object id="45" name="qblock" x="360" y="200" width="40" height="40"/>
   <object id="46" name="qblock" x="280" y="240" width="40" height="40"/>
   <object id="47" name="qblock" x="520" y="120" width="40" height="40"/>

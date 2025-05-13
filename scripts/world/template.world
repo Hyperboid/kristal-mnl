@@ -13,6 +13,13 @@
             "width": 800,
             "x": 920,
             "y": -520
+        },
+        {
+            "fileName": "maps/room2d.tmx",
+            "height": 960,
+            "width": 960,
+            "x": -1080,
+            "y": 0
         }
     ],
     "onlyShowAdjacentMaps": false,

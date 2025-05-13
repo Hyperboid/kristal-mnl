@@ -628,19 +628,6 @@ return {
           properties = {}
         },
         {
-          id = 44,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 592,
-          y = -95,
-          width = 0,
-          height = 2,
-          rotation = 0,
-          visible = true,
-          properties = {}
-        },
-        {
           id = 45,
           name = "qblock",
           type = "",
