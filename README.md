@@ -6,6 +6,7 @@ A library that turns your beloved Deltarune engine into Mario & Luigi.
 
 # Contributing Guidelines
 
+1. Do not use generative AI (eg. LLMs, diffusion) for your contributions.
 1. Don't use assets you don't have permission for 
     - Don't use official Nintendo assets (unless you can *somehow* get a license, which I doubt)
 2. Stay in the scope of recreating Mario & Luigi gameplay.
