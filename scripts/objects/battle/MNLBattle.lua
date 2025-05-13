@@ -12,12 +12,13 @@ function MNLBattle:init()
     self.defeated_enemies = {}
     self.action_select = MNLBattleActionSelect(self)
     self.enemy_select = MNLBattleEnemySelect(self)
+    self.victory = MNLBattleVictory(self)
     self.state_manager = StateManager("", self, true)
     self.state_manager:addState("INTRO", {update = self.updateIntro})
     self.state_manager:addState("ACTIONS", {enter = self.beginActions})
     self.state_manager:addState("ACTIONSELECT", self.action_select)
     self.state_manager:addState("ENEMYSELECT", self.enemy_select)
-    self.state_manager:addState("VICTORY", {enter = self.returnToWorld})
+    self.state_manager:addState("VICTORY", self.victory)
     self.music = Music()
     self.timer = self:addChild(Timer())
     self.last_button_pressed = {}
@@ -156,9 +157,9 @@ function MNLBattle:update()
     end
     self.enemies_to_remove = {}
 
-    self.state_manager:update()
     self.update_child_list = true
     super.update(self)
+    self.state_manager:update()
 end
 
 function MNLBattle:sortChildren()
