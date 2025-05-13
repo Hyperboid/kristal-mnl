@@ -7,31 +7,38 @@ function event:init(data)
     local properties = data.properties or {}
     self.sprite = Sprite("world/events/qblock/default")
     self:addChild(self.sprite)
+    self.sprite.path = "world/events/qblock"
     self.sprite:setScale(2)
     self.solid = true
-    self:move(0,10)
-    self.sprite:move(0,10)
     local h = self.height/2
     self.ground_collider = Hitbox(self, 1,h+11,self.width-2,h-1)
     self.ground_collider.thickness = 30
     self:setHitbox(1,h+11,self.width-2,h-1)
     self.collider.thickness = 15
     self.collider.z = -20
-    self:setOrigin(0,1)
 end
 
 function event:postLoad()
-    if self:getFlag("used_once") then
-        self.sprite:set("world/events/qblock/used")
+    if self.world.map.side then
+        self.sprite.path = self.sprite.path .. "/side"
+        self:setHitbox(0,0,self.width,self.height)
+    else
+        self.z = self.z + 10
+        self.y = self.y + 20
+        self:move(0,10)
+        self.sprite:move(0,10)
+        self:setOrigin(0,1)
     end
-    self.z = self.z + 10
-    self.y = self.y + 20
+    self.sprite:set("default")
+    if self:getFlag("used_once") then
+        self.sprite:set("used")
+    end
     self.init_z = self.z
     self.target_z = self.z + 10
 end
 
 function event:onHit(object, hit_type)
-    if hit_type == "hammer" or object.z < (self.z-10) then
+    if hit_type == "hammer" or (not self.world.map.side and object.z < (self.z-10)) or (self.world.map.side and object.y > (self.y+20)) then
         Assets.playSound("bump")
         -- if self.bumping then return end
         local resume
@@ -53,7 +60,7 @@ function event:onHit(object, hit_type)
             self.timer_handle = self.world.map.timer:tween(.1, self.sprite, {
                 z = 0
             }, "in-quad", resume)
-            self.sprite:set("world/events/qblock/used")
+            self.sprite:set("used")
             coroutine.yield()
             self.bumping = false
         end)
@@ -74,6 +81,7 @@ function event:getDebugRectangle()
 end
 
 function event:drawShadow()
+    if self.world.map.side then return end
     Draw.setColor(COLORS.black(.2))
     love.graphics.ellipse("fill", (self.width/2), self.height + self:getGroundLevel() * -2, 16,8)
 end
