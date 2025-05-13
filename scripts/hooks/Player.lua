@@ -113,7 +113,8 @@ function Player:updateWalk()
     if not self:isOnFloor() then
         self.coyote_time = (3/30)
         self.state_manager:setState("AIR")
-    elseif not self:isOnFloor(1) then
+    elseif self.world.map.side and not self:isOnFloor(1) then
+        -- TODO: Somehow make this work in non-side maps
         self:moveZ(-4)
     end
     if self.jump_buffer > 0 then
@@ -230,6 +231,7 @@ function Player:endAir()
 end
 
 function Player:moveZ(z, speed)
+    local was_collided =  self:checkSolidCollision()
     if self.world.map.side then
         if NOCLIP then return end
         z = (z or 0) * -(speed or 1)
@@ -247,10 +249,14 @@ function Player:moveZ(z, speed)
                     collided_object:onHit(self, "jump")
                 end
                 if moved < 0 then
-                    self:setState("WALK")
+                    if self.world.map.side then
+                        self.z_vel = 0
+                    else
+                        self:setState("WALK")
+                    end
                 else
                     self.y = prev_z
-                    self.z_vel = math.abs(self.z_vel) * -moved
+                    self.z_vel = 0
                 end
                 return collided, collided_object
             end
@@ -279,7 +285,7 @@ function Player:fullMoveZ(z, speed)
                 self:setState("WALK")
             else
                 self.z = prev_z
-                self.z_vel = math.abs(self.z_vel) * -moved
+                self.z_vel = 0
             end
             return collided, collided_object
         end
@@ -287,6 +293,7 @@ function Player:fullMoveZ(z, speed)
 end
 
 function Player:updateAir()
+    local should_walk = not self.world.map.side or not self:checkSolidCollision()
     local collided = false
     if self:isMovementEnabled() then
         collided = self:moveZ(self.z_vel * DT)
@@ -299,7 +306,9 @@ function Player:updateAir()
     local ground_level, ground_obj = self:getGroundLevel()
     local is_on_floor, floor_obj = self:isOnFloor()
     if is_on_floor and self.z_vel <= 0 then
-        self:setState("WALK")
+        if should_walk then
+            self:setState("WALK")
+        end
         self.z_vel = 1
         if self.world.map.side then
             self.y = self.y - 8
