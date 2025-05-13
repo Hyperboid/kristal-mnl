@@ -16,6 +16,7 @@ function event:init(data)
     self:setHitbox(1,h+11,self.width-2,h-1)
     self.collider.thickness = 15
     self.collider.z = -20
+    self.reusable = false
 end
 
 function event:postLoad()
@@ -30,7 +31,7 @@ function event:postLoad()
         self:setOrigin(0,1)
     end
     self.sprite:set("default")
-    if self:getFlag("used_once") then
+    if not self.reusable and self:getFlag("used_once") then
         self.sprite:set("used")
     end
     self.init_z = self.z
@@ -50,7 +51,7 @@ function event:onHit(object, hit_type)
                 z = 0 + 10
             }, "out-quad", resume)
             coroutine.yield()
-            if self:getFlag("used_once", false) then
+            if not self.reusable and self:getFlag("used_once", false) then
                 self.world.timer:after(.1,resume)
                 coroutine.yield()
             else
@@ -60,7 +61,9 @@ function event:onHit(object, hit_type)
             self.timer_handle = self.world.map.timer:tween(.1, self.sprite, {
                 z = 0
             }, "in-quad", resume)
-            self.sprite:set("used")
+            if not self.reusable then
+                self.sprite:set("used")
+            end
             coroutine.yield()
             self.bumping = false
         end)

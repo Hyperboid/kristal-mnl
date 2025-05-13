@@ -96,11 +96,6 @@ function World:sortChildren()
     Utils.popPerformance()
 end
 
-function World:openMenu(menu, layer)
-    if self.player and self.player.state_manager.state ~= "WALK" then return end
-    return super.openMenu(self,menu,layer)
-end
-
 function World:spawnFollower(chara, options)
     local f = super.spawnFollower(self, chara, options)
     local dx, dy = Utils.getFacingVector(f.facing)
@@ -114,6 +109,8 @@ end
 function World:onKeyPressed(key)
     if Input.is("actionswap", key) then
         self:toggleActions()
+    elseif Input.is("menu", key) and not (self.player and self.player.state_manager.state ~= "WALK") then
+        return
     end
     return super.onKeyPressed(self, key)
 end
