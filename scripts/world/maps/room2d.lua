@@ -385,7 +385,7 @@ return {
           shape = "rectangle",
           x = 880,
           y = 280,
-          width = 40,
+          width = 120,
           height = 40,
           rotation = 0,
           visible = true,
@@ -577,8 +577,8 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["map"] = "room2",
-            ["marker"] = "entry"
+            ["map"] = "room1",
+            ["marker"] = "wentry"
           }
         },
         {
@@ -760,8 +760,8 @@ return {
           name = "entry",
           type = "",
           shape = "point",
-          x = 880,
-          y = 240,
+          x = 920,
+          y = 280,
           width = 0,
           height = 0,
           rotation = 0,

@@ -10,7 +10,7 @@ return {
   tilewidth = 40,
   tileheight = 40,
   nextlayerid = 9,
-  nextobjectid = 49,
+  nextobjectid = 52,
   properties = {
     ["floor"] = 0,
     ["light"] = true,
@@ -48,8 +48,8 @@ return {
         0, 26, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 0, 0, 0, 0, 0, 0,
         0, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 0, 0, 0, 0, 0, 0,
         0, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 0, 0, 0, 0, 0, 0,
-        0, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 7, 7, 7, 7, 7, 7,
-        0, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 15, 15, 15, 15, 15, 15,
+        7, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 7, 7, 7, 7, 7, 7,
+        15, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 15, 15, 15, 15, 15, 15,
         0, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 0, 0, 6, 7, 8, 0,
         0, 14, 15, 15, 11, 11, 11, 11, 11, 11, 11, 15, 15, 16, 0, 0, 14, 15, 16, 0,
         0, 0, 0, 0, 14, 15, 11, 11, 11, 15, 16, 0, 0, 0, 0, 0, 18, 19, 20, 0,
@@ -361,9 +361,9 @@ return {
           type = "",
           shape = "rectangle",
           x = 0,
-          y = 120,
+          y = 280,
           width = 40,
-          height = 240,
+          height = 80,
           rotation = 0,
           visible = true,
           properties = {}
@@ -442,6 +442,19 @@ return {
           y = 800,
           width = 160,
           height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 49,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 0,
+          y = 120,
+          width = 40,
+          height = 80,
           rotation = 0,
           visible = true,
           properties = {}
@@ -644,6 +657,22 @@ return {
           properties = {
             ["z"] = 0
           }
+        },
+        {
+          id = 51,
+          name = "transition",
+          type = "",
+          shape = "rectangle",
+          x = -40,
+          y = 200,
+          width = 40,
+          height = 80,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["map"] = "room2d",
+            ["marker"] = "entry"
+          }
         }
       }
     },
@@ -695,6 +724,19 @@ return {
           type = "",
           shape = "point",
           x = 760,
+          y = 240,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 50,
+          name = "wentry",
+          type = "",
+          shape = "point",
+          x = 40,
           y = 240,
           width = 0,
           height = 0,

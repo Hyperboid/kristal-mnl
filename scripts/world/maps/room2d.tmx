@@ -86,7 +86,7 @@
   <object id="17" x="200" y="440" width="40" height="240"/>
   <object id="18" x="360" y="440" width="40" height="240"/>
   <object id="23" x="600" y="320" width="40" height="360"/>
-  <object id="24" x="880" y="280" width="40" height="40"/>
+  <object id="24" x="880" y="280" width="120" height="40"/>
   <object id="25" x="880" y="320" width="40" height="480"/>
   <object id="26" x="600" y="800" width="280" height="40"/>
   <object id="49" x="880" y="520">
@@ -127,8 +127,8 @@ you.</property>
   </object>
   <object id="29" name="transition" x="960" y="200" width="40" height="80">
    <properties>
-    <property name="map" value="room2"/>
-    <property name="marker" value="entry"/>
+    <property name="map" value="room1"/>
+    <property name="marker" value="wentry"/>
    </properties>
   </object>
   <object id="33" name="interactable" x="280" y="80" width="40" height="40">
@@ -170,7 +170,7 @@ no-good wall slammers.</property>
   <object id="20" name="spawn" x="300" y="250">
    <point/>
   </object>
-  <object id="30" name="entry" x="880" y="240">
+  <object id="30" name="entry" x="920" y="280">
    <point/>
   </object>
  </objectgroup>
