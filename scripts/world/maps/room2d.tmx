@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="24" height="24" tilewidth="40" tileheight="40" infinite="0" backgroundcolor="#aa000000" nextlayerid="9" nextobjectid="55">
+<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="24" height="24" tilewidth="40" tileheight="40" infinite="0" backgroundcolor="#aa000000" nextlayerid="9" nextobjectid="56">
  <editorsettings>
   <export target="room2d.lua" format="lua"/>
  </editorsettings>
@@ -154,6 +154,13 @@ no-good wall slammers.</property>
   <object id="47" name="qblock" x="520" y="120" width="40" height="40"/>
   <object id="48" name="qblock" x="200" y="280" width="40" height="40">
    <properties>
+    <property name="z" type="int" value="0"/>
+   </properties>
+  </object>
+  <object id="55" name="enemy" x="80" y="320" width="40" height="40">
+   <properties>
+    <property name="actor" value="dummy"/>
+    <property name="encounter" value="dummy"/>
     <property name="z" type="int" value="0"/>
    </properties>
   </object>

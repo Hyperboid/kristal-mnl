@@ -10,7 +10,7 @@ return {
   tilewidth = 40,
   tileheight = 40,
   nextlayerid = 9,
-  nextobjectid = 55,
+  nextobjectid = 56,
   backgroundcolor = { 0, 0, 0, 170 },
   properties = {
     ["floor"] = 0,
@@ -691,6 +691,23 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["z"] = 0
+          }
+        },
+        {
+          id = 55,
+          name = "enemy",
+          type = "",
+          shape = "rectangle",
+          x = 80,
+          y = 320,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["actor"] = "dummy",
+            ["encounter"] = "dummy",
             ["z"] = 0
           }
         }
