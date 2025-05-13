@@ -109,7 +109,7 @@ end
 function World:onKeyPressed(key)
     if Input.is("actionswap", key) then
         self:toggleActions()
-    elseif Input.is("menu", key) and not (self.player and self.player.state_manager.state ~= "WALK") then
+    elseif Input.is("menu", key) and not (self.player and self.player.state_manager.state == "WALK") then
         return
     end
     return super.onKeyPressed(self, key)
