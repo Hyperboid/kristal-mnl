@@ -395,4 +395,9 @@ end
 --     print(debug.traceback(string.format("Changed state from %q to %q.", old, new)))
 -- end
 
+function Player:onAdd(parent)
+    super.onAdd(self,parent)
+    self.z = self:getGroundLevel()
+end
+
 return Player
