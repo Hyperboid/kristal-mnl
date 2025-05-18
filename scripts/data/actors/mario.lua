@@ -15,7 +15,11 @@ function actor:init()
         ["hammer"] = {-25, -25}
     }
     self.animations = {
-        ["hammer"] = {"hammer", 1/15, false, temp = true}
+        ["hammer"] = {"hammer", 1/30, false, next="hammer_done"},
+        ---@param spr Sprite
+        ["hammer_done"] = {"hammer", function (spr, wait)
+            spr:setFrame(#spr.frames)
+        end}
     }
 end
 

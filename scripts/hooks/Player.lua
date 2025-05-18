@@ -7,6 +7,7 @@ function Player:init(...)
     self.z_vel = 0
     self.jump_buffer = -math.huge
     self.state_manager:addState("AIR", {update = self.updateAir, enter = self.beginAir, leave = self.endAir})
+    self.state_manager:addState("HAMMER", {update = self.updateHammer, enter = self.beginHammer, leave = self.endHammer})
     self.walk_speed = 8
     self.force_walk = true
     self:addFX(GroundMaskFX())
@@ -337,6 +338,10 @@ end
 
 function Player:draw()
     super.draw(self)
+    local col = self.hammer_collider[self.facing]
+    if DEBUG_RENDER and col then
+        col:draw(0.5, 0.5, 1)
+    end
     if DEBUG_RENDER and self.is_player then
         love.graphics.scale(0.5)
         love.graphics.setFont(Assets.getFont("main_mono", 16))
@@ -348,7 +353,7 @@ function Player:findInteractable()
     if not self.is_player then return end
     Object.startCache()
     local interactables = {}
-    local col = self.interact_collider[self.facing]
+    local col = self.hammer_collider[self.facing]
     for _, obj in ipairs(self.world.children) do
         if obj.onInteract and obj:collidesWith(col) then
             Object.endCache()
@@ -369,7 +374,10 @@ function Player:getDesiredAction()
             end
         end
         return "jump"
-        
+    elseif self.world.action_index == 2 then
+        if self.state == "WALK" then
+            return "hammer"
+        end
     end
 end
 
@@ -381,6 +389,43 @@ function Player:doInteract()
     super.interact(self)
 end
 
+function Player:beginHammer()
+    self.world.door_delay = 100
+    self:setAnimation("hammer", function ()
+        self:hammerCheck()
+        self.world.door_delay = .2
+    end)
+end
+
+function Player:updateHammer()
+    if self.world.door_delay == 0 then
+        self:setState("WALK")
+    end
+end
+
+function Player:hammerCheck()
+    local hittables = {}
+    local col = self.hammer_collider[self.facing]
+    for _, obj in ipairs(self.world.children) do
+        if obj.onHit and obj:collidesWith(col) then
+            local rx, ry = obj:getRelativePos(obj.width / 2, obj.height / 2, self.parent)
+            table.insert(hittables, { obj = obj, dist = Utils.dist(self.x, self.y, rx, ry) })
+        end
+    end
+    table.sort(hittables, function (a, b) return a.dist < b.dist end)
+    for _, v in ipairs(hittables) do
+        if v.obj:onHit(self, "hammer") then
+            self.interact_buffer = v.obj.interact_buffer or 0
+            return true, hittables
+        end
+    end
+    return false, hittables
+end
+
+function Player:endHammer()
+    self:resetSprite()
+end
+
 function Player:doAction(action)
     if (action or "none") == "none" then return end
     if action == "jump" then
@@ -388,6 +433,8 @@ function Player:doAction(action)
     elseif self.is_player and (action == "interact" or action == "talk") then
         self:doInteract()
         return true
+    elseif action == "hammer" then
+        self:setState("HAMMER")
     end
 end
 
@@ -398,6 +445,21 @@ end
 function Player:onAdd(parent)
     super.onAdd(self,parent)
     self.z = self:getGroundLevel()
+end
+
+function Player:setActor(actor)
+    super.setActor(self, actor)
+    local hx, hy, hw, hh = self.collider.x, self.collider.y, self.collider.width, self.collider.height
+
+    self.hammer_collider = {
+        ["left"] = Hitbox(self, hx - 20, hy, hw / 2 + 20, hh),
+        ["right"] = Hitbox(self, hx + hw / 2, hy, hw / 2 + 20, hh),
+        ["up"] = Hitbox(self, hx, hy - 26, hw, hh / 2 + 26),
+        ["down"] = Hitbox(self, hx, hy + hh / 2, hw, hh / 2 + 14)
+    }
+    for _, value in pairs(self.hammer_collider) do
+        value.thickness = self.collider.thickness*0.75
+    end
 end
 
 return Player

@@ -8,7 +8,7 @@ end
 
 function MNLButtonPrompt:draw()
     super.draw(self)
-    if not self.world.player:isMovementEnabled() then return end
+    if self.world:hasCutscene() then return end
     love.graphics.push()
     love.graphics.translate(SCREEN_WIDTH, SCREEN_HEIGHT)
     love.graphics.translate(-10, -10)
