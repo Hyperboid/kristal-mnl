@@ -387,7 +387,8 @@ end
 
 ---@ratin
 function MNLBattle:showRating(battler, rating)
-    if not Assets.playSound("rating_"..rating) then
+    -- TODO: Make the actual files louder
+    if not Assets.playSound("ratings/"..rating, 6) then
         Assets.playSound("bell", 1, ({
             ok = 0.5,
             good = 0.6,
